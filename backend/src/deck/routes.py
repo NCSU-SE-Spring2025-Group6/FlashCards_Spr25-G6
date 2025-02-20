@@ -51,6 +51,33 @@ def getdeck(id):
             message=f"An error occurred: {e}",
             status=400
         ), 400
+    
+@deck_bp.route('/deck/<id>/stats', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_deck_stats(id):
+    '''This method calculates stats of a specific deck by its ID.'''
+    try:
+        leaderboard_entries = db.child("leaderboard").child(id).get()
+        total_users = 0
+        total_correct = 0
+        total_incorrect = 0
+        if leaderboard_entries.val():
+            for entry in leaderboard_entries.each():
+                data = entry.val()
+                total_correct += data.get("correct", 0)
+                total_incorrect += data.get("incorrect", 0)
+                total_users += 1
+        avg_correct = total_correct / total_users if total_users > 0 else 0
+        avg_incorrect = total_incorrect / total_users if total_users > 0 else 0
+        return jsonify({
+            "average_correct": avg_correct,
+            "average_incorrect": avg_incorrect,
+            "total_users": total_users,
+            "message": "Deck performance statistics fetched successfully",
+            "status": 200
+        }), 200
+    except Exception as e:
+        return jsonify({"message": f"Error fetching deck stats: {e}", "status": 400}), 400
 
 @deck_bp.route('/deck/all', methods=['GET'])
 @cross_origin(supports_credentials=True)
