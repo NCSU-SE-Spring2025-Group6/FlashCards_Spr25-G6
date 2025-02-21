@@ -58,7 +58,7 @@ def getdecks():
     '''Fetch all decks. Shows private decks for authenticated users and public decks for non-authenticated users.'''
     args = request.args
     localId = args.get('localId')
-    
+
     try:
         decks = []
         if localId:
@@ -92,7 +92,7 @@ def create():
         title = data['title']
         description = data['description']
         visibility = data['visibility']
-        
+
         db.child("deck").push({
             "userId": localId,
             "title": title,
@@ -182,7 +182,7 @@ def get_leaderboard(deckId):
             "message": f"An error occurred: {e}",
             "status": 400
         }), 400
-    
+
 @deck_bp.route('/deck/<deck_id>/update-leaderboard', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def update_leaderboard(deck_id):
@@ -210,7 +210,7 @@ def update_leaderboard(deck_id):
 
     except Exception as e:
         return jsonify({"message": "Failed to update leaderboard", "error": str(e)}), 500
-    
+
 @deck_bp.route('/deck/<deckId>/user-score/<userId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_user_score(deckId, userId):
@@ -247,23 +247,86 @@ def get_user_score(deckId, userId):
             "status": 400
         }), 400
 
-# @deck_bp.route('/deck/<id>/last-opened', methods=['PATCH'])
-# @cross_origin(supports_credentials=True)
-# def update_last_opened_deck(id):
-#     try:
-#         data = request.get_json()
-#         last_opened_at = data.get('lastOpenedAt')
-        
-#         db.child("deck").child(id).update({
-#             "lastOpenedAt": last_opened_at
-#         })
 
-#         return jsonify(
-#             message='Last opened time updated successfully',
-#             status=200
-#         ), 200
-#     except Exception as e:
-#         return jsonify(
-#             message=f"Failed to update last opened time: {e}",
-#             status=400
-#         ), 400
+@deck_bp.route('/deck/<deck_id>/record-wrong-answer', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def record_wrong_answer(deck_id):
+    '''Record a card that a user answered incorrectly using front/back pair'''
+    try:
+        data = request.get_json()
+        user_id = data.get("userId")
+        front = data.get("front")
+        back = data.get("back")
+        hint = data.get("hint")
+        timestamp = datetime.now().isoformat()
+
+        if None in (user_id, front, back, hint):
+            return jsonify({"message": "All fields must be provided"}), 400
+
+        # Find card ID by front/back pair in this deck
+        query_result = db.child("card").order_by_child("front").equal_to(front).get()
+        
+        card_id = None
+        for card in query_result.each():
+            if card.val().get('back') == back and card.val().get('hint') == hint:
+                card_id = card.key()
+                break
+
+        if not card_id:
+            return jsonify({"message": "Card not found in this deck"}), 404
+
+        ref = db.child("wrong_answers").child(user_id).child(deck_id).child(card_id)
+        ref.push(timestamp)
+
+        return jsonify({"message": "Wrong answer recorded successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"message": f"Failed to record wrong answer: {e}", "status": 400}), 400
+
+
+@deck_bp.route('/deck/<deck_id>/practice-cards/<user_id>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_practice_cards(deck_id, user_id):
+    '''Get N most frequently missed cards for a user in a deck'''
+    try:
+        # Get N from query params, default to 10
+        n = request.args.get('limit', default=10, type=int)
+
+        # Get all wrong answers for this user and deck
+        wrong_answers = db.child("wrong_answers").child(user_id).child(deck_id).get()
+        print("Wrong Answers:", wrong_answers.val())
+
+        if not wrong_answers.val():
+            return jsonify({"message": "No incorrect answers found. Keep rocking!"}), 200
+
+        # Count occurrences of each card
+        card_frequencies = {}
+        for card_id, data in wrong_answers.val().items():
+            if db.child("card").child(card_id).get():
+                card_frequencies[card_id] = len(data)
+        print("Card Frequencies:", card_frequencies)
+
+        # Sort by frequency and take top N
+        most_missed_cards = sorted(
+            card_frequencies.items(), 
+            key=lambda x: x[1], 
+            reverse=True
+        )[:n]
+        print("Most Missed Cards:", most_missed_cards)
+
+        practice_cards = []
+        for card_id, frequency in most_missed_cards:
+            card = db.child("card").child(card_id).get()
+            if card.val():
+                card_data = card.val()
+                card_data['missCount'] = frequency
+                practice_cards.append(card_data)
+        print("Practice Cards:", practice_cards)  # Debug print
+
+        return jsonify({
+            "cards": practice_cards,
+            "message": "Practice cards retrieved successfully"
+        }), 200
+
+    except Exception as e:
+        return jsonify({"message": f"Failed to get practice cards: {e}"}), 400

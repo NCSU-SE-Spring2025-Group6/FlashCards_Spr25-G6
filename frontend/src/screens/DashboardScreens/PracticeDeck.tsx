@@ -41,6 +41,7 @@ interface Deck {
 }
 
 interface FlashCard {
+  id: string;
   front: string;
   back: string;
   hint: string;
@@ -61,6 +62,7 @@ const PracticeDeck = () => {
   const [fetchingDeck, setFetchingDeck] = useState(false);
   const [fetchingCards, setFetchingCards] = useState(false);
   const [quizMode, setQuizMode] = useState(false);
+  const [frequentlyMissedMode, setFrequentlyMissedMode] = useState(false);
   const [leaderboardVisible, setLeaderboardVisible] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
 
@@ -83,13 +85,20 @@ const PracticeDeck = () => {
     }
   };
 
+  const testAPI = async () => {
+    try {
+      const res = await http.get(`/deck/${id}/practice-cards/${localId}`);
+    } finally {
+    }
+  };
+
   const fetchCards = async () => {
     setFetchingCards(true);
     try {
       const res = await http.get(`/deck/${id}/card/all`);
-      setCards(res.data?.cards || []);
-    } finally {
-      setFetchingCards(false);
+      console.log("Successful")
+    } catch (error) {
+      console.log("Error in test API: ", error)
     }
   };
 
@@ -158,6 +167,12 @@ const PracticeDeck = () => {
                       onClick={() => setQuizMode(!quizMode)}
                     >
                       {quizMode ? "Exit Quiz" : "Take Quiz"}
+                    </button>
+                    <button
+                      className="btn btn-white"
+                      onClick={() => {setFrequentlyMissedMode(!frequentlyMissedMode); testAPI()}}
+                    >
+                        {frequentlyMissedMode ? "Leave Practice Mode" : "Practice Frequently Missed Questions"}
                     </button>
                     <button
                       className="btn btn-white"

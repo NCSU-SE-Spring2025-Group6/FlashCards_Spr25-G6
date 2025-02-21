@@ -33,6 +33,26 @@ export default function Quiz({ cards }: QuizProps) {
     return shuffled;
   }
 
+    const recordWrongAnswer = async (card: {front: string, back: string, hint: string}) => {
+        const flashCardUser = window.localStorage.getItem("flashCardUser");
+
+        const { localId = "", email = "" } = flashCardUser ? JSON.parse(flashCardUser) : {};
+
+        if (localId) {
+            try {
+                await http.post(`/deck/${id}/record-wrong-answer`, {
+                    userId: localId,
+                    front: card.front,
+                    back: card.back,
+                    hint: card.hint,
+                });
+                console.log("Recorded successfully")
+            } catch (error) {
+                console.error("Error recording wrong answer:", error);
+            }
+        }
+    };
+
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     const isCorrect = option === currentCard.back;
@@ -42,6 +62,7 @@ export default function Quiz({ cards }: QuizProps) {
       setScore((prevScore) => prevScore + 1);
     } else {
       setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
+      recordWrongAnswer(currentCard)
     }
 
     setTimeout(() => {
