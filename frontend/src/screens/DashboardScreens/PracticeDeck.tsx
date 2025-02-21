@@ -85,20 +85,13 @@ const PracticeDeck = () => {
     }
   };
 
-  const testAPI = async () => {
-    try {
-      const res = await http.get(`/deck/${id}/practice-cards/${localId}`);
-    } finally {
-    }
-  };
-
   const fetchCards = async () => {
     setFetchingCards(true);
     try {
       const res = await http.get(`/deck/${id}/card/all`);
-      console.log("Successful")
-    } catch (error) {
-      console.log("Error in test API: ", error)
+      setCards(res.data?.cards || []);
+    } finally {
+      setFetchingCards(false);
     }
   };
 
@@ -170,7 +163,7 @@ const PracticeDeck = () => {
                     </button>
                     <button
                       className="btn btn-white"
-                      onClick={() => {setFrequentlyMissedMode(!frequentlyMissedMode); testAPI()}}
+                      onClick={() => {setFrequentlyMissedMode(!frequentlyMissedMode)}}
                     >
                         {frequentlyMissedMode ? "Leave Practice Mode" : "Practice Frequently Missed Questions"}
                     </button>
