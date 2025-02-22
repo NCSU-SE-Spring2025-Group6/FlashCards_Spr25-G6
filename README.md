@@ -29,6 +29,11 @@
 <!-- Release Badge -->
 <a href="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue" alt="Release">
 <img src="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue"/> </a>
+
+<!-- Ruff Badge -->
+<a href="https://img.shields.io/badge/ruff-v0.9.7-brightgreen.svg" alt="Ruff version">
+<img src="https://img.shields.io/badge/ruff-v0.9.7-brightgreen.svg"/> </a>
+
 </p>
 
 

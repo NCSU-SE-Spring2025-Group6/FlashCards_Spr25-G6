@@ -8,34 +8,34 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
 
-project = 'FlashCards Backend'
-copyright = 'none'
-author = 'none'
+sys.path.insert(0, os.path.abspath("../.."))
+
+project = "FlashCards Backend"
+copyright = "none"
+author = "none"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.coverage',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.coverage",
 ]
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 exclude_patterns = []
-
 
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+html_theme = "sphinx_rtd_theme"
+html_static_path = ["_static"]
 html_theme_options = {
-    'body_max_width': None,
+    "body_max_width": None,
 }
 
 # Napoleon settings
@@ -51,4 +51,3 @@ napoleon_use_ivar = False
 napoleon_use_param = True
 napoleon_use_rtype = True
 napoleon_type_aliases = None
-
