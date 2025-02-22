@@ -20,14 +20,8 @@
 
 <a href="https://doi.org/10.5281/zenodo.14027445" alt="DOI">
 <img src="https://zenodo.org/badge/872468772.svg"/> </a>
-<a href="https://img.shields.io/badge/python-v3.8+-yellow.svg" alt="Python version">
-<img src="https://img.shields.io/badge/python-v3.8+-yellow.svg"/> </a>
-<a href="https://img.shields.io/github/repo-size/JohnDamilola/FlashCards?color=brightgreen" alt="Repo size">
-<img src="https://img.shields.io/github/repo-size/JohnDamilola/FlashCards?color=brightgreen"/> </a>
-<img src="https://img.shields.io/github/languages/top/JohnDamilola/Flashcards?style=plastic">
-<img src="https://img.shields.io/tokei/lines/github/johndamilola/flashcards?style=plastic">
-<a href="https://github.com/JohnDamilola/FlashCards/issues">
-  <img src="https://img.shields.io/github/issues-raw/johndamilola/flashcards?style=plastic"></a>
+<a href="https://img.shields.io/badge/python-v3.12.2-yellow.svg" alt="Python version">
+<img src="https://img.shields.io/badge/python-v3.12.2-yellow.svg"/> </a>
 <a href="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue" alt="Release">
 <img src="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue"/> </a>
 </p>
@@ -56,8 +50,8 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 <a href="https://www.heroku.com/"><img src="https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white" /></a>
 
 ## Getting started & Installation:
-- Backend [See README.md](https://github.com/WolfByteCollective/FlashCards/blob/main/backend/Readme.md)
-- Frontend [See README.md](https://github.com/WolfByteCollective/FlashCards/blob/main/frontend/README.md)
+- **Backend** -> [See README.md](backend/README.md)
+- **Frontend** -> [See README.md](frontend/README.md)
 
 ## Current Screens
 
