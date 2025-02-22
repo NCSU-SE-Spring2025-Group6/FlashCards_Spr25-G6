@@ -24,7 +24,8 @@ jobs:
 
     - name: Install sphinx
       run: |
-        apt install -y python3-sphinx
+        sudo apt update
+        sudo apt install -y python3-sphinx
 
     - name: Build docs
       run: |
