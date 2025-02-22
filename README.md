@@ -93,25 +93,5 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 - [ ] Progress tracking by subject and review options like retrying incorrect questions
 - [ ] Chrome Extension feature that enables users to highlight text on websites or online PDFs and instantly create flashcards from their selections.
 
-## Contributions to the Project
-Please refer to the [Contributing.md](https://github.com/JohnDamilola/FlashCards/blob/main/Contributing.md) if you want to contrbute to the FlashCards source code. Follow all the guidelines mentioned and raise a pull request for the developers to review before the code goes to the main source code.
-
-## Help
-
-Email any queries to the contributors -
-1. [Akhil Chawla](achawla@ncsu.edu)
-2. [Sanjana Dalal](sdalal2@ncsu.edu)
-3. [Priya Gandhi](pgandi4@ncsu.edu)
-
-## Authors 
-
-1. [Akhil Chawla](https://github.com/AkhilChawla)
-2. [Sanjana Dalal](https://github.com/sdalal11)
-3. [Priya Gandhi](https://github.com/PriyaGandhi311)
-
-
 ## License
 [MIT](https://tldrlegal.com/license/mit-license)
-
-## Funding
-Our project at the moment is not funded by any organization/individual.
