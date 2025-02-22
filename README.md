@@ -15,8 +15,8 @@
 <img src="https://img.shields.io/github/license/CSC510-Group18/flashcards?style=plastic"></a>
 
 <!-- Workflow Badge -->
-<a href="https://github.com/WolfByteCollective/FlashCards/actions/workflows/Application.yml" alt="Python application">
-<img src="https://github.com/WolfByteCollective/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
+<a href="https://github.com/CSC510-Group18/FlashCards/blob/main/.github/workflows/backend_tests.yml" alt="Python Backend Tests">
+<img src="https://github.com/CSC510-Group18/FlashCards/actions/workflows/backend_tests.yml/badge.svg?branch=main"/> </a>
 
 <!-- Codecov Badge -->
 <a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
