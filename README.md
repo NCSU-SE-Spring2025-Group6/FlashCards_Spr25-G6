@@ -1,3 +1,5 @@
+
+<!-- Logo image -->
 <p align="center">
   <img
     width="400"
@@ -5,26 +7,31 @@
     alt="Starship – Cross-shell prompt"
   />
 </p>
-<p align="center">
-  <a href="https://github.com/JohnDamilola/FlashCards/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/johndamilola/flashcards?style=plastic"></a>
-  <img src="https://img.shields.io/github/languages/count/johndamilola/flashcards">
-  <a href="https://github.com/JohnDamilola/FlashCards/graphs/contributors" alt="Contributors">
-<img src="https://img.shields.io/github/contributors/JohnDamilola/FlashCards?style=plastic"/> </a>
 
+<p align="center">
+
+<!-- Licence Badge -->
+<a href="https://github.com/CSC510-Group18/FlashCards/blob/main/LICENSE">
+<img src="https://img.shields.io/github/license/CSC510-Group18/flashcards?style=plastic"></a>
+
+<!-- Workflow Badge -->
 <a href="https://github.com/WolfByteCollective/FlashCards/actions/workflows/Application.yml" alt="Python application">
 <img src="https://github.com/WolfByteCollective/FlashCards/actions/workflows/Application.yml/badge.svg?style=plastic?branch=main"/> </a>
 
+<!-- Codecov Badge -->
 <a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
 <img src="https://codecov.io/github/WolfByteCollective/FlashCards/branch/main/graph/badge.svg"/> </a>
 
-<a href="https://doi.org/10.5281/zenodo.14027445" alt="DOI">
-<img src="https://zenodo.org/badge/872468772.svg"/> </a>
+<!-- Python Version Badge -->
 <a href="https://img.shields.io/badge/python-v3.12.2-yellow.svg" alt="Python version">
 <img src="https://img.shields.io/badge/python-v3.12.2-yellow.svg"/> </a>
+
+<!-- Release Badge -->
 <a href="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue" alt="Release">
 <img src="https://img.shields.io/github/release/JohnDamilola/FlashCards?color=brightblue"/> </a>
 </p>
+
+
 ## Description
 Are you a student and having trouble preparing for tests and exams? Look no further. FlashCards also helps you memorize all that hard-to-remember information with online flashcards so that you ace your exams!
 
