@@ -45,9 +45,7 @@ def getfolder(id):
     """
     try:
         folder = db.child("folder").child(id).get()
-        return jsonify(
-            folder=folder.val(), message="Fetched folder successfully", status=200
-        ), 200
+        return jsonify(folder=folder.val(), message="Fetched folder successfully", status=200), 200
     except Exception as e:
         return jsonify(folder={}, message=f"An error occurred: {e}", status=400), 400
 
@@ -62,19 +60,12 @@ def getfolders():
     args = request.args
     userId = args and args["userId"]
     try:
-        user_folders = (
-            db.child("folder").order_by_child("userId").equal_to(userId).get()
-        )
+        user_folders = db.child("folder").order_by_child("userId").equal_to(userId).get()
         folders = []
         for folder in user_folders.each():
             obj = folder.val()
             obj["id"] = folder.key()
-            decks = (
-                db.child("folder_deck")
-                .order_by_child("folderId")
-                .equal_to(folder.key())
-                .get()
-            )
+            decks = db.child("folder_deck").order_by_child("folderId").equal_to(folder.key()).get()
             obj["decks"] = []
             if decks.each():
                 for deck in decks.each():
@@ -85,9 +76,7 @@ def getfolders():
             obj["decks_count"] = len(obj["decks"])
             folders.append(obj)
 
-        return jsonify(
-            folders=folders, message="Fetched folders successfully", status=200
-        ), 200
+        return jsonify(folders=folders, message="Fetched folders successfully", status=200), 200
     except Exception as e:
         return jsonify(folders=[], message=f"An error occurred: {e}", status=400), 400
 
@@ -182,9 +171,7 @@ def removedeckfromfolder():
         folder_id = data["folderId"]
         deck_id = data["deckId"]
 
-        folder_deck_ref = (
-            db.child("folder_deck").order_by_child("folderId").equal_to(folder_id).get()
-        )
+        folder_deck_ref = db.child("folder_deck").order_by_child("folderId").equal_to(folder_id).get()
         for fd in folder_deck_ref.each():
             if fd.val().get("deckId") == deck_id:
                 db.child("folder_deck").child(fd.key()).remove()
@@ -192,9 +179,7 @@ def removedeckfromfolder():
 
         return jsonify(message="Deck removed from folder successfully", status=200), 200
     except Exception as e:
-        return jsonify(
-            message=f"Failed to remove deck from folder: {e}", status=400
-        ), 400
+        return jsonify(message=f"Failed to remove deck from folder: {e}", status=400), 400
 
 
 @folder_bp.route("/decks/<folder_id>", methods=["GET"])
@@ -205,9 +190,7 @@ def get_decks_for_folder(folder_id):
     GET /decks/{folder_id}
     """
     try:
-        folder_obj = (
-            db.child("folder_deck").order_by_child("folderId").equal_to(folder_id).get()
-        )
+        folder_obj = db.child("folder_deck").order_by_child("folderId").equal_to(folder_id).get()
         deck_list = []
         for folders in folder_obj.each():
             obj = folders.val()
@@ -220,9 +203,7 @@ def get_decks_for_folder(folder_id):
             deck_obj = db.child("deck").child(deck).get()
             deck_title.append({"id": deck, "title": deck_obj.val()["title"]})
 
-        return jsonify(
-            decks=deck_title, message="Fetched decks successfully", status=200
-        ), 200
+        return jsonify(decks=deck_title, message="Fetched decks successfully", status=200), 200
     except Exception as e:
         print(e)
         return jsonify(decks=[], message=f"An error occurred: {e}", status=400), 400

@@ -56,9 +56,7 @@ class TestFolders(unittest.TestCase):
     @patch("src.folders.routes.db")
     def test_create_folder_success(self, mock_db):
         """Test successful folder creation"""
-        mock_db.child.return_value.push.return_value = {
-            "name": "folder_id"
-        }  # Simulate a folder reference
+        mock_db.child.return_value.push.return_value = {"name": "folder_id"}  # Simulate a folder reference
         folder_data = {"name": "My New Folder", "userId": "test_user_id"}
 
         response = self.app.post(
@@ -88,9 +86,7 @@ class TestFolders(unittest.TestCase):
     def test_update_folder_success(self, mock_db):
         """Test successful folder update"""
         folder_id = "folder_id"
-        mock_db.child.return_value.child.return_value.update.return_value = (
-            None  # Simulate successful update
-        )
+        mock_db.child.return_value.child.return_value.update.return_value = None  # Simulate successful update
         folder_data = {"name": "Updated Folder Name"}
 
         response = self.app.patch(
@@ -108,9 +104,7 @@ class TestFolders(unittest.TestCase):
         folder_id = "folder_id"
         folder_data = {"name": "Updated Folder Name"}
 
-        mock_db.child.return_value.child.return_value.update.side_effect = Exception(
-            "Update failed"
-        )
+        mock_db.child.return_value.child.return_value.update.side_effect = Exception("Update failed")
 
         response = self.app.patch(
             f"/folder/update/{folder_id}",
@@ -125,9 +119,7 @@ class TestFolders(unittest.TestCase):
     def test_delete_folder_success(self, mock_db):
         """Test successful folder deletion"""
         folder_id = "folder_id"
-        mock_db.child.return_value.child.return_value.remove.return_value = (
-            None  # Simulate successful removal
-        )
+        mock_db.child.return_value.child.return_value.remove.return_value = None  # Simulate successful removal
 
         response = self.app.delete(f"/folder/delete/{folder_id}")
         assert response.status_code == 200
@@ -138,9 +130,7 @@ class TestFolders(unittest.TestCase):
     def test_delete_folder_error(self, mock_db):
         """Test folder deletion failure"""
         folder_id = "folder_id"
-        mock_db.child.return_value.child.return_value.remove.side_effect = Exception(
-            "Delete failed"
-        )
+        mock_db.child.return_value.child.return_value.remove.side_effect = Exception("Delete failed")
 
         response = self.app.delete(f"/folder/delete/{folder_id}")
         assert response.status_code == 400

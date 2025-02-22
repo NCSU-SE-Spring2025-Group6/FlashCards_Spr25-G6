@@ -45,9 +45,7 @@ def getdeck(id):
     """
     try:
         deck = db.child("deck").child(id).get()
-        return jsonify(
-            deck=deck.val(), message="Fetched deck successfully", status=200
-        ), 200
+        return jsonify(deck=deck.val(), message="Fetched deck successfully", status=200), 200
     except Exception as e:
         return jsonify(decks=[], message=f"An error occurred: {e}", status=400), 400
 
@@ -65,33 +63,23 @@ def getdecks():
     try:
         decks = []
         if localId:
-            user_decks = (
-                db.child("deck").order_by_child("userId").equal_to(localId).get()
-            )
+            user_decks = db.child("deck").order_by_child("userId").equal_to(localId).get()
             for deck in user_decks.each():
                 obj = deck.val()
                 obj["id"] = deck.key()
-                cards = (
-                    db.child("card").order_by_child("deckId").equal_to(deck.key()).get()
-                )
+                cards = db.child("card").order_by_child("deckId").equal_to(deck.key()).get()
                 obj["cards_count"] = len(cards.val()) if cards.val() else 0
                 decks.append(obj)
         else:
-            alldecks = (
-                db.child("deck").order_by_child("visibility").equal_to("public").get()
-            )
+            alldecks = db.child("deck").order_by_child("visibility").equal_to("public").get()
             for deck in alldecks.each():
                 obj = deck.val()
                 obj["id"] = deck.key()
-                cards = (
-                    db.child("card").order_by_child("deckId").equal_to(deck.key()).get()
-                )
+                cards = db.child("card").order_by_child("deckId").equal_to(deck.key()).get()
                 obj["cards_count"] = len(cards.val()) if cards.val() else 0
                 decks.append(obj)
 
-        return jsonify(
-            decks=decks, message="Fetching decks successfully", status=200
-        ), 200
+        return jsonify(decks=decks, message="Fetching decks successfully", status=200), 200
     except Exception as e:
         return jsonify(decks=[], message=f"An error occurred {e}", status=400), 400
 
@@ -218,9 +206,7 @@ def get_leaderboard(deckId):
             }
         ), 200
     except Exception as e:
-        return jsonify(
-            {"leaderboard": [], "message": f"An error occurred: {e}", "status": 400}
-        ), 400
+        return jsonify({"leaderboard": [], "message": f"An error occurred: {e}", "status": 400}), 400
 
 
 @deck_bp.route("/deck/<deck_id>/update-leaderboard", methods=["POST"])
@@ -239,9 +225,7 @@ def update_leaderboard(deck_id):
         incorrect = data.get("incorrect")
 
         if not user_id:
-            return jsonify(
-                {"message": "User ID is required"}
-            ), 400  # Validate userId presence
+            return jsonify({"message": "User ID is required"}), 400  # Validate userId presence
 
         # Use user_id from request body to update the leaderboard
         leaderboard_ref = db.child("leaderboard").child(deck_id).child(user_id)
@@ -257,9 +241,7 @@ def update_leaderboard(deck_id):
         return jsonify({"message": "Leaderboard updated successfully"}), 200
 
     except Exception as e:
-        return jsonify(
-            {"message": "Failed to update leaderboard", "error": str(e)}
-        ), 500
+        return jsonify({"message": "Failed to update leaderboard", "error": str(e)}), 500
 
 
 @deck_bp.route("/deck/<deckId>/user-score/<userId>", methods=["GET"])

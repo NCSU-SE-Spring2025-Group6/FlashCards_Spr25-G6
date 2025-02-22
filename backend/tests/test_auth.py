@@ -37,15 +37,11 @@ class TestAuth(unittest.TestCase):
     @patch("src.auth.routes.auth")
     def test_signup_route_registered_user(self, mock_auth):
         """Test the signup route of our app with a registered user"""
-        mock_auth.create_user_with_email_and_password.side_effect = Exception(
-            "User already exists"
-        )
+        mock_auth.create_user_with_email_and_password.side_effect = Exception("User already exists")
 
         response = self.client.post(
             "/signup",
-            data=json.dumps(
-                {"email": "aaronadb@gmail.com", "password": "flashcards123"}
-            ),
+            data=json.dumps({"email": "aaronadb@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
@@ -53,9 +49,7 @@ class TestAuth(unittest.TestCase):
     @patch("src.auth.routes.auth")
     def test_signup_route_unregistered_user_invalid_email(self, mock_auth):
         """Test the signup route of our app with an unregistered user using an invalid email address"""
-        mock_auth.create_user_with_email_and_password.side_effect = Exception(
-            "Invalid email"
-        )
+        mock_auth.create_user_with_email_and_password.side_effect = Exception("Invalid email")
 
         response = self.client.post(
             "/signup",
@@ -75,9 +69,7 @@ class TestAuth(unittest.TestCase):
 
         response = self.client.post(
             "/login",
-            data=json.dumps(
-                {"email": "aaronadb@gmail.com", "password": "flashcards123"}
-            ),
+            data=json.dumps({"email": "aaronadb@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
 
@@ -90,9 +82,7 @@ class TestAuth(unittest.TestCase):
     @patch("src.auth.routes.auth")
     def test_login_route_wrong_password(self, mock_auth):
         """Test the login route of our app with a registered user with a wrong password"""
-        mock_auth.sign_in_with_email_and_password.side_effect = Exception(
-            "Invalid password"
-        )
+        mock_auth.sign_in_with_email_and_password.side_effect = Exception("Invalid password")
 
         response = self.client.post(
             "/login",
@@ -106,15 +96,11 @@ class TestAuth(unittest.TestCase):
     @patch("src.auth.routes.auth")
     def test_login_route_unregistered_user(self, mock_auth):
         """Test the login route of our app with an unregistered user"""
-        mock_auth.sign_in_with_email_and_password.side_effect = Exception(
-            "User not found"
-        )
+        mock_auth.sign_in_with_email_and_password.side_effect = Exception("User not found")
 
         response = self.client.post(
             "/login",
-            data=json.dumps(
-                {"email": "aarondiasbarreto@gmail.com", "password": "flashcards123"}
-            ),
+            data=json.dumps({"email": "aarondiasbarreto@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
@@ -131,9 +117,7 @@ class TestAuth(unittest.TestCase):
 
         response = self.client.post(
             "/signup",
-            data=json.dumps(
-                {"email": "newuser@gmail.com", "password": "newpassword123"}
-            ),
+            data=json.dumps({"email": "newuser@gmail.com", "password": "newpassword123"}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 201)

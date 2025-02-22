@@ -42,9 +42,7 @@ class CardTestApp(unittest.TestCase):
         # Login
         self.client.post(
             "/login",
-            data=json.dumps(
-                {"email": "aaronadb@gmail.com", "password": "flashcards123"}
-            ),
+            data=json.dumps({"email": "aaronadb@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
 
@@ -79,9 +77,7 @@ class CardTestApp(unittest.TestCase):
         # Login
         self.client.post(
             "/login",
-            data=json.dumps(
-                {"email": "aaronadb@gmail.com", "password": "flashcards123"}
-            ),
+            data=json.dumps({"email": "aaronadb@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
 
@@ -120,9 +116,7 @@ class CardTestApp(unittest.TestCase):
         # Login
         self.client.post(
             "/login",
-            data=json.dumps(
-                {"email": "aaronadb@gmail.com", "password": "flashcards123"}
-            ),
+            data=json.dumps({"email": "aaronadb@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
 
@@ -160,9 +154,7 @@ class CardTestApp(unittest.TestCase):
     def test_get_cards_exception(self, mock_cards_db, mock_deck_db, mock_auth):
         """Test the error handling of getcards method"""
         # Mock database to raise an exception
-        mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception(
-            "Database error"
-        )
+        mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception("Database error")
 
         response = self.client.get("/deck/Test/card/all")
         self.assertEqual(response.status_code, 400)
@@ -214,9 +206,7 @@ class CardTestApp(unittest.TestCase):
     def test_update_card_exception(self, mock_cards_db, mock_deck_db, mock_auth):
         """Test error handling in update card functionality"""
         # Mock database to raise an exception
-        mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception(
-            "Database error"
-        )
+        mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception("Database error")
 
         response = self.client.patch(
             "/deck/test_deck/update/test_card",
@@ -245,9 +235,7 @@ class CardTestApp(unittest.TestCase):
     def test_delete_card_exception(self, mock_cards_db, mock_deck_db, mock_auth):
         """Test error handling in delete card functionality"""
         # Mock database to raise an exception
-        mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception(
-            "Database error"
-        )
+        mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception("Database error")
 
         response = self.client.delete("/deck/test_deck/delete/test_card")
 

@@ -47,9 +47,7 @@ def getcards(deckId):
     try:
         user_cards = db.child("card").order_by_child("deckId").equal_to(deckId).get()
         cards = [card.val() for card in user_cards.each()]
-        return jsonify(
-            cards=cards, message="Fetching cards successfully", status=200
-        ), 200
+        return jsonify(cards=cards, message="Fetching cards successfully", status=200), 200
     except Exception as e:
         return jsonify(cards=[], message=f"An error occurred {e}", status=400), 400
 
@@ -69,9 +67,7 @@ def createcards(deckId):
         cards = data["cards"]
 
         """remove existing cards"""
-        previous_cards = (
-            db.child("card").order_by_child("deckId").equal_to(deckId).get()
-        )
+        previous_cards = db.child("card").order_by_child("deckId").equal_to(deckId).get()
         for card in previous_cards.each():
             db.child("card").child(card.key()).remove()
 
@@ -88,7 +84,7 @@ def createcards(deckId):
             )
 
         return jsonify(message="Adding cards Successful", status=201), 201
-    except:
+    except Exception:
         return jsonify(message="Adding cards Failed", status=400), 400
 
 
@@ -130,12 +126,11 @@ def deletecard(id, cardid):
     DELETE /deck/{id}/delete/{cardid}
     """
     try:
-        data = request.get_json()
         deckid = id
         cardid = cardid
 
         db.child("card").order_by_child("Id").equal_to(f"{deckid}_{cardid}").remove()
 
         return jsonify(message="Delete Card Successful", status=200), 200
-    except:
+    except Exception:
         return jsonify(message="Delete Card Failed", status=400), 400

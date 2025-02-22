@@ -26,9 +26,7 @@ class TestDeck(unittest.TestCase):
         with self.app:
             self.app.post(
                 "/login",
-                data=json.dumps(
-                    dict(email="aaronadb@gmail.com", password="flashcards123")
-                ),
+                data=json.dumps(dict(email="aaronadb@gmail.com", password="flashcards123")),
                 content_type="application/json",
                 follow_redirects=True,
             )
@@ -52,9 +50,7 @@ class TestDeck(unittest.TestCase):
         with self.app:
             self.app.post(
                 "/login",
-                data=json.dumps(
-                    dict(email="aaronadb@gmail.com", password="flashcards123")
-                ),
+                data=json.dumps(dict(email="aaronadb@gmail.com", password="flashcards123")),
                 content_type="application/json",
                 follow_redirects=True,
             )
@@ -105,9 +101,7 @@ class TestDeck(unittest.TestCase):
         with self.app:
             self.app.post(
                 "/login",
-                data=json.dumps(
-                    dict(email="aaronadb@gmail.com", password="flashcards123")
-                ),
+                data=json.dumps(dict(email="aaronadb@gmail.com", password="flashcards123")),
                 content_type="application/json",
                 follow_redirects=True,
             )
@@ -142,9 +136,7 @@ class TestDeck(unittest.TestCase):
         with self.app:
             self.app.post(
                 "/login",
-                data=json.dumps(
-                    dict(email="aaronadb@gmail.com", password="flashcards123")
-                ),
+                data=json.dumps(dict(email="aaronadb@gmail.com", password="flashcards123")),
                 content_type="application/json",
                 follow_redirects=True,
             )
@@ -168,16 +160,12 @@ class TestDeck(unittest.TestCase):
         with self.app:
             # Arrange: Mock the database update to raise an exception
             with patch("src.deck.routes.db.child") as mock_db:
-                mock_db.return_value.child.return_value.update.side_effect = Exception(
-                    "Database update failed"
-                )
+                mock_db.return_value.child.return_value.update.side_effect = Exception("Database update failed")
 
                 # Simulate user login and deck creation
                 self.app.post(
                     "/login",
-                    data=json.dumps(
-                        dict(email="aaronadb@gmail.com", password="flashcards123")
-                    ),
+                    data=json.dumps(dict(email="aaronadb@gmail.com", password="flashcards123")),
                     content_type="application/json",
                     follow_redirects=True,
                 )
@@ -195,17 +183,12 @@ class TestDeck(unittest.TestCase):
                 )
 
                 # Act: Send a request to update the last opened timestamp
-                response = self.app.patch(
-                    "/deck/updateLastOpened/Test", content_type="application/json"
-                )
+                response = self.app.patch("/deck/updateLastOpened/Test", content_type="application/json")
 
                 # Assert: Check the response status code for failure
                 assert response.status_code == 400
                 response_data = json.loads(response.data)
-                assert (
-                    response_data["message"]
-                    == "Failed to update lastOpened: Database update failed"
-                )
+                assert response_data["message"] == "Failed to update lastOpened: Database update failed"
 
     @patch("src.deck.routes.db")  # Mock the database connection
     def test_get_leaderboard_route(self, mock_db):
@@ -239,9 +222,7 @@ class TestDeck(unittest.TestCase):
                     }
                 ),
             ]
-            mock_db.child.return_value.child.return_value.get.return_value = (
-                mock_entries
-            )
+            mock_db.child.return_value.child.return_value.get.return_value = mock_entries
 
             # Act: Send a request to get the leaderboard for a specific deck
             response = self.app.get("/deck/TestDeck/leaderboard")
@@ -251,15 +232,9 @@ class TestDeck(unittest.TestCase):
             response_data = json.loads(response.data)
             assert response_data["status"] == 200
             assert len(response_data["leaderboard"]) == 3
-            assert (
-                response_data["leaderboard"][0]["userEmail"] == "user2@example.com"
-            )  # Highest score
-            assert (
-                response_data["leaderboard"][1]["userEmail"] == "user1@example.com"
-            )  # Second highest score
-            assert (
-                response_data["leaderboard"][2]["userEmail"] == "user3@example.com"
-            )  # Lowest score
+            assert response_data["leaderboard"][0]["userEmail"] == "user2@example.com"  # Highest score
+            assert response_data["leaderboard"][1]["userEmail"] == "user1@example.com"  # Second highest score
+            assert response_data["leaderboard"][2]["userEmail"] == "user3@example.com"  # Lowest score
 
     @patch("src.deck.routes.db")  # Mock the database connection
     def test_update_leaderboard_success(self, mock_db):
@@ -274,9 +249,7 @@ class TestDeck(unittest.TestCase):
 
             # Mock the database update
             mock_leaderboard_ref = MagicMock()
-            mock_db.child.return_value.child.return_value.child.return_value = (
-                mock_leaderboard_ref
-            )
+            mock_db.child.return_value.child.return_value.child.return_value = mock_leaderboard_ref
 
             # Act: Send a POST request to update the leaderboard
             response = self.app.post(
@@ -345,9 +318,7 @@ class TestDeck(unittest.TestCase):
         assert response.status_code == 200
         response_data = json.loads(response.data)
         assert response_data["score"] == {"correct": 0, "incorrect": 0}
-        assert (
-            response_data["message"] == "No score found for the user, returning zeros."
-        )
+        assert response_data["message"] == "No score found for the user, returning zeros."
 
     @patch("src.deck.routes.db")  # Mock the database connection
     def test_get_user_score_error(self, mock_db):
@@ -356,9 +327,7 @@ class TestDeck(unittest.TestCase):
         user_id = "user123"
 
         # Simulate an exception when accessing the database
-        mock_db.child.return_value.child.return_value.child.return_value.get.side_effect = Exception(
-            "Database error"
-        )
+        mock_db.child.return_value.child.return_value.child.return_value.get.side_effect = Exception("Database error")
 
         # Act: Send a GET request to fetch the user's score
         response = self.app.get(f"/deck/{deck_id}/user-score/{user_id}")
@@ -372,9 +341,7 @@ class TestDeck(unittest.TestCase):
     def test_get_deck_error(self, mock_db):
         """Test error handling in getdeck route"""
         # Mock the database to raise an exception
-        mock_db.child.return_value.child.return_value.get.side_effect = Exception(
-            "Database error"
-        )
+        mock_db.child.return_value.child.return_value.get.side_effect = Exception("Database error")
 
         response = self.app.get("/deck/Test")
         assert response.status_code == 400
@@ -428,9 +395,7 @@ class TestDeck(unittest.TestCase):
     def test_get_decks_error(self, mock_db):
         """Test error handling in getdecks route"""
         # Mock the database to raise an exception
-        mock_db.child.return_value.order_by_child.return_value.equal_to.side_effect = (
-            Exception("Database error")
-        )
+        mock_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception("Database error")
 
         response = self.app.get("/deck/all", query_string=dict(localId="Test"))
         assert response.status_code == 400
@@ -442,9 +407,7 @@ class TestDeck(unittest.TestCase):
     def test_update_deck_error(self, mock_db):
         """Test error handling in update route"""
         # Mock the database to raise an exception
-        mock_db.child.return_value.child.return_value.update.side_effect = Exception(
-            "Database error"
-        )
+        mock_db.child.return_value.child.return_value.update.side_effect = Exception("Database error")
 
         response = self.app.patch(
             "/deck/update/Test",
@@ -466,9 +429,7 @@ class TestDeck(unittest.TestCase):
     def test_delete_deck_error(self, mock_db):
         """Test error handling in delete route"""
         # Mock the database to raise an exception
-        mock_db.child.return_value.child.return_value.remove.side_effect = Exception(
-            "Database error"
-        )
+        mock_db.child.return_value.child.return_value.remove.side_effect = Exception("Database error")
 
         response = self.app.delete("/deck/delete/Test")
         assert response.status_code == 400
@@ -479,9 +440,7 @@ class TestDeck(unittest.TestCase):
     def test_get_leaderboard_error(self, mock_db):
         """Test error handling in get_leaderboard route"""
         # Mock the database to raise an exception
-        mock_db.child.return_value.child.return_value.get.side_effect = Exception(
-            "Database error"
-        )
+        mock_db.child.return_value.child.return_value.get.side_effect = Exception("Database error")
 
         response = self.app.get("/deck/TestDeck/leaderboard")
         assert response.status_code == 400
@@ -494,9 +453,7 @@ class TestDeck(unittest.TestCase):
         """Test update_leaderboard route with missing userId"""
         response = self.app.post(
             "/deck/TestDeck/update-leaderboard",
-            data=json.dumps(
-                {"userEmail": "test@example.com", "correct": 10, "incorrect": 2}
-            ),
+            data=json.dumps({"userEmail": "test@example.com", "correct": 10, "incorrect": 2}),
             content_type="application/json",
         )
         assert response.status_code == 400

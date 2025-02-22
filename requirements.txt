@@ -16,3 +16,4 @@ setuptools
 sphinx-rtd-theme
 sphinx
 ruff==0.9.7
+pre-commit
