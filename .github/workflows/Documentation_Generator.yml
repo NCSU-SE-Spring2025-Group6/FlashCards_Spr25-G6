@@ -2,7 +2,7 @@ name: Documentation Generator
 
 on:
     push:
-        branches: ["main"]
+        branches: ["disable"]
 
 jobs:
     build:
