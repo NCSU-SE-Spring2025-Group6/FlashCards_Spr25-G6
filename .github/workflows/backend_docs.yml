@@ -30,6 +30,7 @@ jobs:
     - name: Build docs and deploy
       run: |
         cd backend/docs && make html
+        touch backend/docs/build/html/.nojekyll
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.4
