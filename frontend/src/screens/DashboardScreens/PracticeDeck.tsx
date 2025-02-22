@@ -232,7 +232,22 @@ const PracticeDeck = () => {
               ) : quizMode ? (
                 <Quiz cards={cards} />
               ) : (
-                <Flashcard cards={cards} />
+                      <>
+                        <Flashcard cards={cards} />
+
+                        <div className="flashcard-controls mt-3 d-flex gap-2 justify-content-center">
+                          {!quizMode && (
+                            <Button 
+                              type="primary" 
+                              onClick={shuffleCards}
+                              className="shuffle-button"
+                              style={{ display: 'flex', alignItems: 'center' }}
+                            >
+                              Shuffle Cards
+                            </Button>
+                          )}
+                        </div>
+                      </>
               )}
             </div>
           </div>
