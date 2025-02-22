@@ -1,7 +1,8 @@
 /*
 MIT License
 
-Copyright (c) 2022 John Damilola, Leo Hsiang, Swarangi Gaurkar, Kritika Javali, Aaron Dias Barreto
+Copyright (c) 2022 John Damilola, Leo Hsiang, Swarangi Gaurkar, Kritika Javali, Aaron Dias 
+Barreto
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +25,7 @@ SOFTWARE.
 
 import { Card, Modal, Button, Table } from "antd";
 import Flashcard from "components/PracticeDeck";
-import Quiz from "components/QuizDeck"; // Importing the new Quiz component
+import Quiz from "components/QuizDeck";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { PropagateLoader } from "react-spinners";
@@ -72,8 +73,30 @@ const PracticeDeck = () => {
 
   useEffect(() => {
     fetchDeck();
-    fetchCards();
   }, []);
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      setFetchingCards(true);
+      try {
+        let url: string;
+        if (frequentlyMissedMode) {
+          url = `/deck/${id}/practice-cards/${localId}`;
+        } else {
+          url = `/deck/${id}/card/all`;
+        }
+        const res = await http.get(url);
+        console.debug('Successfully fetched cards:', res.data);  // Debug print
+        setCards(res.data?.cards || []);
+      } catch (error: any) {
+        console.error('Error fetching cards:', error.response?.data || error.message);  // Error message
+        alert('Failed to fetch cards. Please try again later.');  // Optional user feedback
+      } finally {
+        setFetchingCards(false);
+      }
+    };
+    if (id && localId) fetchCards();
+  }, [frequentlyMissedMode, id, localId]);
 
   const fetchDeck = async () => {
     setFetchingDeck(true);
@@ -85,24 +108,25 @@ const PracticeDeck = () => {
     }
   };
 
-  const fetchCards = async () => {
-    setFetchingCards(true);
-    try {
-      const res = await http.get(`/deck/${id}/card/all`);
-      setCards(res.data?.cards || []);
-    } finally {
-      setFetchingCards(false);
+  const shuffleCards = () => {
+    const shuffled = [...cards];
+    // Fisher-Yates shuffle algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
+    setCards(shuffled);
   };
 
   const fetchLeaderboard = async () => {
     try {
       const res = await http.get(`/deck/${id}/leaderboard`);
-      // Format lastAttempt before setting leaderboard data
-      const formattedLeaderboard = (res.data?.leaderboard || []).map((entry: { lastAttempt: string | number | Date; }) => ({
-        ...entry,
-        lastAttempt: new Date(entry.lastAttempt).toLocaleString(), // Convert to human-readable format
-      }));
+      const formattedLeaderboard = (res.data?.leaderboard || []).map(
+        (entry: { lastAttempt: string | number | Date }) => ({
+          ...entry,
+          lastAttempt: new Date(entry.lastAttempt).toLocaleString(),
+        })
+      );
       setLeaderboardData(formattedLeaderboard);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
@@ -120,13 +144,13 @@ const PracticeDeck = () => {
 
   const leaderboardColumns = [
     {
-      title: "Rank", // New column for rank
-      render: (_: any, __: any, index: number) => index + 1, // Automatically generates the row number
-      key: "rank"
+      title: "Rank",
+      render: (_: any, __: any, index: number) => index + 1,
+      key: "rank",
     },
     { title: "Email", dataIndex: "userEmail", key: "userEmail" },
     { title: "Correct Answers", dataIndex: "correct", key: "correct" },
-    { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" }
+    { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" },
   ];
 
   const { title, description, userId } = deck || {};
@@ -146,7 +170,9 @@ const PracticeDeck = () => {
                         onClick={() => navigate(-1)}
                       ></i>
                     </h3>
-                    <h3><b>{title}</b></h3>
+                    <h3>
+                      <b>{title}</b>
+                    </h3>
                     <p>{description}</p>
                   </div>
                   <div className="d-flex gap-2">
@@ -157,15 +183,23 @@ const PracticeDeck = () => {
                     )}
                     <button
                       className="btn btn-white"
-                      onClick={() => setQuizMode(!quizMode)}
+                      onClick={() => {
+                        setFrequentlyMissedMode(false)
+                        setQuizMode(!quizMode)
+                      }}
                     >
                       {quizMode ? "Exit Quiz" : "Take Quiz"}
                     </button>
                     <button
                       className="btn btn-white"
-                      onClick={() => {setFrequentlyMissedMode(!frequentlyMissedMode)}}
+                      onClick={() => {
+                        setFrequentlyMissedMode(!frequentlyMissedMode)
+                        setQuizMode(false)
+                      }}
                     >
-                        {frequentlyMissedMode ? "Leave Practice Mode" : "Practice Frequently Missed Questions"}
+                      {frequentlyMissedMode
+                        ? "Leave Practice Mode"
+                        : "Practice Frequently Missed Questions"}
                     </button>
                     <button
                       className="btn btn-white"
@@ -192,11 +226,11 @@ const PracticeDeck = () => {
                 <div className="row justify-content-center empty-pane">
                   <div className="text-center">
                     <img className="img-fluid" src={EmptyImg} />
-                    <p>No Cards Added Yet</p>
+                    <p>No Cards Available</p>
                   </div>
                 </div>
               ) : quizMode ? (
-                <Quiz cards={cards} /> // Render quiz mode
+                <Quiz cards={cards} />
               ) : (
                 <Flashcard cards={cards} />
               )}
@@ -205,7 +239,6 @@ const PracticeDeck = () => {
         </div>
       </section>
 
-      {/* Leaderboard Modal */}
       <Modal
         title="Leaderboard"
         open={leaderboardVisible}
@@ -215,15 +248,15 @@ const PracticeDeck = () => {
             Close
           </Button>,
         ]}
-        width="80%" // Set a width for the modal
-        style={{ maxHeight: '80vh', overflowY: 'auto' }} // Allow for scroll if content is too tall
-        bodyStyle={{ padding: '0' }} // Optionally adjust padding
+        width="80%"
+        style={{ maxHeight: "80vh", overflowY: "auto" }}
+        bodyStyle={{ padding: "0" }}
       >
         <Table
           columns={leaderboardColumns}
           dataSource={leaderboardData}
           pagination={false}
-          rowKey="userEmail"  // Ensure a unique key for each row
+          rowKey="userEmail"
         />
       </Modal>
     </div>

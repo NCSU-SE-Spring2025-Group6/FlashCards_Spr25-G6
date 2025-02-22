@@ -294,7 +294,6 @@ def get_practice_cards(deck_id, user_id):
 
         # Get all wrong answers for this user and deck
         wrong_answers = db.child("wrong_answers").child(user_id).child(deck_id).get()
-        print("Wrong Answers:", wrong_answers.val())
 
         if not wrong_answers.val():
             return jsonify({"message": "No incorrect answers found. Keep rocking!"}), 200
@@ -304,7 +303,6 @@ def get_practice_cards(deck_id, user_id):
         for card_id, data in wrong_answers.val().items():
             if db.child("card").child(card_id).get():
                 card_frequencies[card_id] = len(data)
-        print("Card Frequencies:", card_frequencies)
 
         # Sort by frequency and take top N
         most_missed_cards = sorted(
@@ -312,16 +310,13 @@ def get_practice_cards(deck_id, user_id):
             key=lambda x: x[1], 
             reverse=True
         )[:n]
-        print("Most Missed Cards:", most_missed_cards)
 
         practice_cards = []
         for card_id, frequency in most_missed_cards:
             card = db.child("card").child(card_id).get()
-            if card.val():
+            if card.val() and frequency > 0:
                 card_data = card.val()
-                card_data['missCount'] = frequency
                 practice_cards.append(card_data)
-        print("Practice Cards:", practice_cards)  # Debug print
 
         return jsonify({
             "cards": practice_cards,
