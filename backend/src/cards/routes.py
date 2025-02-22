@@ -41,7 +41,10 @@ db = firebase.database()
 @card_bp.route('/deck/<deckId>/card/all', methods = ['GET'])
 @cross_origin(supports_credentials=True)
 def getcards(deckId):
-    '''This method is called when the user want to fetch all of the cards in a deck. Only the deckid is required to fetch all cards from the required deck.'''
+    '''This method is called when the user want to fetch all of the cards in a deck. Only the deckid is required to fetch all cards from the required deck.
+    
+    GET /deck/{deckId}/card/all
+    '''
     try:
         user_cards = db.child("card").order_by_child("deckId").equal_to(deckId).get()
         cards = [card.val() for card in user_cards.each()]
@@ -62,7 +65,11 @@ def getcards(deckId):
 @cross_origin(supports_credentials=True)
 def createcards(deckId):
     '''This method is routed when the user requests to create new cards in a deck. 
-    Only the deckid is required to add cards to a deck.'''
+    Only the deckid is required to add cards to a deck.
+    
+    POST /deck/{deckId}/card/create
+    payload: { localId: “string”, cards: [{front: “string”, back: “string”, hint: “string”}] }
+    '''
     try:
         data = request.get_json()
         localId = data['localId']
@@ -98,7 +105,11 @@ def createcards(deckId):
 @cross_origin(supports_credentials=True)
 def updatecard(id,cardid):
     '''This method is called when the user requests to update cards in a deck. The card can be updated in terms of its word and meaning.
-    Here deckid and cardid is required to uniquely identify a updating card.'''
+    Here deckid and cardid is required to uniquely identify a updating card.
+    
+    PATCH /deck/{id}/update/{cardid}
+    payload: { word: “string”, meaning: “string” }
+    '''
     try:
         data = request.get_json()
         deckid = id
@@ -124,7 +135,10 @@ def updatecard(id,cardid):
 @card_bp.route('/deck/<id>/delete/<cardid>', methods = ['DELETE'])
 @cross_origin(supports_credentials=True)
 def deletecard(id,cardid):
-    '''This method is called when the user requests to delete the card. The deckid and the particular cardid is required to delete the card.'''
+    '''This method is called when the user requests to delete the card. The deckid and the particular cardid is required to delete the card.
+    
+    DELETE /deck/{id}/delete/{cardid}
+    '''
     try:
         data = request.get_json()
         deckid = id

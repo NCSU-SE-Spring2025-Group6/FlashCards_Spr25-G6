@@ -44,7 +44,11 @@ def index():
 @auth_bp.route('/signup', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def signup():                                       
-    '''this method is used to create new users and register them in firebase'''
+    '''this method is used to create new users and register them in firebase
+    
+    POST /signup [email, password]
+    payload: { email: “string”, password: “string” }
+    '''
     try:
         data = request.get_json()
         email = data['email']
@@ -67,7 +71,11 @@ def signup():
 @auth_bp.route('/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login():                                        
-    '''this method is used by registered users to sign in to their account'''
+    '''this method is used by registered users to sign in to their account
+    
+    POST /login [email, password]
+    payload: { email: “string”, password: “string” }
+    '''
     try:
         data = request.get_json()
         email = data['email']

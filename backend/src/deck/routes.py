@@ -37,7 +37,10 @@ db = firebase.database()
 @deck_bp.route('/deck/<id>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getdeck(id):
-    '''This method fetches a specific deck by its ID.'''
+    '''This method fetches a specific deck by its ID.
+    
+    GET /deck/{id}
+    '''
     try:
         deck = db.child("deck").child(id).get()
         return jsonify(
@@ -55,7 +58,10 @@ def getdeck(id):
 @deck_bp.route('/deck/all', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getdecks():
-    '''Fetch all decks. Shows private decks for authenticated users and public decks for non-authenticated users.'''
+    '''Fetch all decks. Shows private decks for authenticated users and public decks for non-authenticated users.
+    
+    GET /deck/all
+    '''
     args = request.args
     localId = args.get('localId')
     
@@ -85,7 +91,11 @@ def getdecks():
 @deck_bp.route('/deck/create', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def create():
-    '''Create a new deck.'''
+    '''Create a new deck.
+    
+    POST /deck/create
+    payload: { localId: “string”, title: “string”, description: “string”, visibility: “string” }
+    '''
     try:
         data = request.get_json()
         localId = data['localId']
@@ -109,7 +119,11 @@ def create():
 @deck_bp.route('/deck/update/<id>', methods=['PATCH'])
 @cross_origin(supports_credentials=True)
 def update(id):
-    '''Update an existing deck.'''
+    '''Update an existing deck.
+    
+    PATCH /deck/update/{id}
+    payload: { localId: “string”, title: “string”, description: “string”, visibility: “string” }
+    '''
     try:
         data = request.get_json()
         localId = data['localId']
@@ -131,7 +145,10 @@ def update(id):
 @deck_bp.route('/deck/delete/<id>', methods=['DELETE'])
 @cross_origin(supports_credentials=True)
 def delete(id):
-    '''Delete a deck.'''
+    '''Delete a deck.
+    
+    DELETE /deck/delete/{id}
+    '''
     try:
         db.child("deck").child(id).remove()
         return jsonify(message='Delete Deck Successful', status=200), 200
@@ -141,7 +158,10 @@ def delete(id):
 @deck_bp.route('/deck/updateLastOpened/<id>', methods=['PATCH'])
 @cross_origin(supports_credentials=True)
 def update_last_opened(id):
-    '''Update the lastOpened timestamp when a deck is opened.'''
+    '''Update the lastOpened timestamp when a deck is opened.
+    
+    PATCH /deck/updateLastOpened/{id}
+    '''
     try:
         current_time = datetime.utcnow().isoformat()
         db.child("deck").child(id).update({"lastOpened": current_time})
@@ -154,7 +174,10 @@ def update_last_opened(id):
 @deck_bp.route('/deck/<deckId>/leaderboard', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_leaderboard(deckId):
-    '''This endpoint fetches the leaderboard data for a specific deck.'''
+    '''This endpoint fetches the leaderboard data for a specific deck.
+    
+    GET /deck/{deckId}/leaderboard
+    '''
     try:
         # Fetch leaderboard data for the given deck
         leaderboard_entries = db.child("leaderboard").child(deckId).get()
@@ -186,6 +209,10 @@ def get_leaderboard(deckId):
 @deck_bp.route('/deck/<deck_id>/update-leaderboard', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def update_leaderboard(deck_id):
+    '''
+    POST /deck/{deck_id}/update-leaderboard
+    payload: { userId: “string”, userEmail: “string”, correct: “number”, incorrect: “number” }
+    '''
     try:
         data = request.get_json()
         # Extract values from the request body
@@ -214,7 +241,10 @@ def update_leaderboard(deck_id):
 @deck_bp.route('/deck/<deckId>/user-score/<userId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_user_score(deckId, userId):
-    '''This endpoint fetches the user's score for a specific deck. If the user doesn't exist, return zero for all score values.'''
+    '''This endpoint fetches the user's score for a specific deck. If the user doesn't exist, return zero for all score values.
+    
+    GET /deck/{deckId}/user-score/{userId}
+    '''
     try:
         # Fetch the user's leaderboard entry for the specified deck
         leaderboard_entry = db.child("leaderboard").child(deckId).child(userId).get()

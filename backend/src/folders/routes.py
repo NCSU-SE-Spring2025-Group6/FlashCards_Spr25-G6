@@ -39,7 +39,10 @@ db = firebase.database()
 @folder_bp.route('/folder/<id>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getfolder(id):
-    '''This method is called when we want to fetch one of the folders by folder ID'''
+    '''This method is called when we want to fetch one of the folders by folder ID
+    
+    GET /folder/{id}
+    '''
     try:
         folder = db.child("folder").child(id).get()
         return jsonify(
@@ -58,7 +61,10 @@ def getfolder(id):
 @folder_bp.route('/folders/all', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getfolders():
-    '''This method is called when we want to fetch all folders for a specific user'''
+    '''This method is called when we want to fetch all folders for a specific user
+    
+    GET /folders/all
+    '''
     args = request.args
     userId = args and args['userId']
     try:
@@ -94,6 +100,10 @@ def getfolders():
 @folder_bp.route('/folder/create', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def createfolder():
+    '''
+    POST /folder/create
+    payload: { name: “string”, userId: “string” }
+    '''
     try:
         data = request.get_json()
         print("data", data)
@@ -124,7 +134,11 @@ def createfolder():
 @folder_bp.route('/folder/update/<id>', methods=['PATCH'])
 @cross_origin(supports_credentials=True)
 def updatefolder(id):
-    '''This method is called when the user wants to update a folder's name.'''
+    '''This method is called when the user wants to update a folder's name.
+    
+    PATCH /folder/update/{id}
+    payload: { name: “string” }
+    '''
     try:
         data = request.get_json()
         folder_name = data.get('name')
@@ -147,7 +161,10 @@ def updatefolder(id):
 @folder_bp.route('/folder/delete/<id>', methods=['DELETE'])
 @cross_origin(supports_credentials=True)
 def deletefolder(id):
-    '''This method is called when the user requests to delete a folder.'''
+    '''This method is called when the user requests to delete a folder.
+    
+    DELETE /folder/delete/{id}
+    '''
     try:
         db.child("folder").child(id).remove()
 
@@ -165,7 +182,11 @@ def deletefolder(id):
 @folder_bp.route('/deck/add-deck', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def adddecktofolder():
-    '''This method allows the user to add a deck to a folder by folderId and deckId.'''
+    '''This method allows the user to add a deck to a folder by folderId and deckId.
+    
+    POST /deck/add-deck
+    payload: { folderId: “string”, deckId: “string” }
+    '''
     try:
         data = request.get_json()
         folder_id = data['folderId']
@@ -190,7 +211,11 @@ def adddecktofolder():
 @folder_bp.route('/folder/remove-deck', methods=['DELETE'])
 @cross_origin(supports_credentials=True)
 def removedeckfromfolder():
-    '''This method allows the user to remove a deck from a folder by folderId and deckId.'''
+    '''This method allows the user to remove a deck from a folder by folderId and deckId.
+    
+    DELETE /folder/remove-deck
+    payload: { folderId: “string”, deckId: “string” }
+    '''
     try:
         data = request.get_json()
         folder_id = data['folderId']
@@ -215,7 +240,10 @@ def removedeckfromfolder():
 @folder_bp.route('/decks/<folder_id>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_decks_for_folder(folder_id):
-    '''This method is called to fetch all decks for a specific folder.'''
+    '''This method is called to fetch all decks for a specific folder.
+    
+    GET /decks/{folder_id}
+    '''
     try:
         folder_obj = db.child("folder_deck").order_by_child("folderId").equal_to(folder_id).get()
         deck_list = []
