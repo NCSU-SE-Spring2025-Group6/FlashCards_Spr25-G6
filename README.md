@@ -68,7 +68,7 @@ conda activate flashcards
 pip3 install .
 ```
 
-## Getting started & Installation:
+## Getting started:
 - **Backend** -> [See README.md](backend/README.md)
 - **Frontend** -> [See README.md](frontend/README.md)
 
