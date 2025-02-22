@@ -61,6 +61,13 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 <a href="https://ant.design/"><img src="https://img.shields.io/badge/Ant%20Design-1890FF?style=for-the-badge&logo=antdesign&logoColor=white" /></a>
 <a href="https://www.heroku.com/"><img src="https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white" /></a>
 
+## Installation
+```bash
+conda create -n flashcards python=3.12.2
+conda activate flashcards
+pip3 install .
+```
+
 ## Getting started & Installation:
 - **Backend** -> [See README.md](backend/README.md)
 - **Frontend** -> [See README.md](frontend/README.md)

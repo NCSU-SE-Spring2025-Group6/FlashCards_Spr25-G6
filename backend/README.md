@@ -1,14 +1,5 @@
 # Getting Started with Firebase
 
-Our backend is developed for `Python 3.12.2`. Use `conda` to install the correct version of Python.
-
-```bash
-conda create -n flashcards python=3.12.2
-conda activate flashcards
-
-pip3 install -r requirements.txt
-```
-
 To run the backend locally, use the following command:
 
 ```bash
