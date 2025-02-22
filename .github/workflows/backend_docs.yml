@@ -36,3 +36,4 @@ jobs:
       with:
         branch: gh-pages 
         folder: backend/docs/build/html
+        token: ${{ secrets.GITHUB_TOKEN }}
