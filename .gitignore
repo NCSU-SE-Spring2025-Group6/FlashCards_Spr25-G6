@@ -18,3 +18,4 @@
 /backend/src/**/__pycache__
 .DS_Store
 /backend/.flaskenv
+__pycache__/
