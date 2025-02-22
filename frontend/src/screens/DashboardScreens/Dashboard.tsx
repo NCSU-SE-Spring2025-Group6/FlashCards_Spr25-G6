@@ -1,5 +1,5 @@
 import { Card, Popconfirm, Button, Modal } from "antd";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import EmptyImg from "assets/images/empty.svg";
 import { PropagateLoader } from "react-spinners";
@@ -7,6 +7,7 @@ import http from "utils/api";
 import Swal from "sweetalert2";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import Navbar from "../../components/Navbar";
+import DeckImportExport from '../../components/DeckImportExport';
 
 interface Deck {
   id: string;
@@ -46,10 +47,45 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
+  const fetchDecks = useCallback(async () => {
+    setFetchingDecks(true);
+    try {
+      const res = await http.get("/deck/all", { params: { localId } });
+      const _decks = res.data?.decks || [];
+      setDecks(_decks);
+
+      // Filter recent decks opened in the last 5 days
+      const fiveDaysAgo = new Date();
+      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+      const recent = _decks
+        .filter((deck: { lastOpened: string | number | Date; }) => 
+          deck.lastOpened && new Date(deck.lastOpened) >= fiveDaysAgo)
+        .sort((a: { lastOpened: string | number | Date; }, b: { lastOpened: string | number | Date; }) => 
+          new Date(b.lastOpened!).getTime() - new Date(a.lastOpened!).getTime());
+      
+      setRecentDecks(recent);
+    } catch (err) {
+      console.error("Error fetching decks:", err);
+      setDecks([]);
+      setRecentDecks([]);
+    } finally {
+      setFetchingDecks(false);
+    }
+  }, [localId]);
+
+  const fetchFolders = useCallback(async () => {
+    try {
+      const res = await http.get("/folders/all", { params: { userId: localId } });
+      setFolders(res.data?.folders || []);
+    } catch (err) {
+      console.error("Error fetching folders:", err);
+    }
+  }, [localId]);
+
   useEffect(() => {
     fetchDecks();
     fetchFolders();
-  }, []);
+  }, [fetchDecks, fetchFolders]);
 
   useEffect(() => {
     updateArrowsVisibilityLibrary();
@@ -67,38 +103,6 @@ const Dashboard = () => {
     }
   }, [decks]);
 
-  const fetchDecks = async () => {
-    setFetchingDecks(true);
-    try {
-      const res = await http.get("/deck/all", { params: { localId } });
-      const _decks = res.data?.decks || [];
-      setDecks(_decks);
-
-      // Filter recent decks opened in the last 5 days
-      const fiveDaysAgo = new Date();
-      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
-      const recent = _decks
-        .filter((deck: { lastOpened: string | number | Date; }) => deck.lastOpened && new Date(deck.lastOpened) >= fiveDaysAgo)
-        .sort((a: { lastOpened: string | number | Date; }, b: { lastOpened: string | number | Date; }) => new Date(b.lastOpened!).getTime() - new Date(a.lastOpened!).getTime());
-      
-        setRecentDecks(recent);
-      } catch (err) {
-        console.error("Error fetching decks:", err);
-        setDecks([]);
-        setRecentDecks([]);
-      } finally {
-        setFetchingDecks(false);
-      }
-    };
-
-  const fetchFolders = async () => {
-    try {
-      const res = await http.get("/folders/all", { params: { userId: localId } });
-      setFolders(res.data?.folders || []);
-    } catch (err) {
-      console.error("Error fetching folders:", err);
-    }
-  };
   const updateLastOpened = async (deckId: string) => {
     const timestamp = new Date().toISOString(); // Get the current timestamp
     await http.patch(`/deck/updateLastOpened/${deckId}`, { lastOpened: timestamp });
@@ -215,7 +219,20 @@ const Dashboard = () => {
           {/* Decks Section */}
           <div className="row mt-4">
             <div className="col-md-12">
-              <p className="title">Your Library</p>
+              <div className="d-flex justify-content-between align-items-center">
+                <p className="title">Your Library</p>
+                <div className="d-flex gap-3">
+                  <DeckImportExport 
+                    mode="import"
+                    onImportSuccess={() => {
+                      fetchDecks();
+                    }} 
+                  />
+                  <Link to="/create-deck" className="btn btn-mains">
+                    <i className="lni lni-plus"></i> Create New Deck
+                  </Link>
+                </div>
+              </div>
             </div>
             {fetchingDecks ? (
               <div className="col-md-12 text-center" style={{ height: "300px" }}>
@@ -242,9 +259,16 @@ const Dashboard = () => {
                         <Link to={`/deck/${id}/practice`} onClick={() => updateLastOpened(id)}>
                           <h5>{title}</h5>
                         </Link>
-                        <div className="d-flex gap-2 visibility-status align-items-center">
-                          {visibility === "public" ? <i className="lni lni-world"></i> : <i className="lni lni-lock-alt"></i>}
-                          {visibility}
+                        <div className="d-flex gap-2">
+                          <div className="visibility-status align-items-center">
+                            {visibility === "public" ? <i className="lni lni-world"></i> : <i className="lni lni-lock-alt"></i>}
+                            {visibility}
+                          </div>
+                          <DeckImportExport 
+                            mode="export"
+                            deckId={id}
+                            onImportSuccess={fetchDecks}
+                          />
                         </div>
                       </div>
                       <p className="description">{description}</p>

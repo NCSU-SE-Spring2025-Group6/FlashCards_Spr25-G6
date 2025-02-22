@@ -24,6 +24,8 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 from datetime import datetime
+import json
+import base64
 
 try:
     from .. import firebase
@@ -267,3 +269,97 @@ def get_user_score(deckId, userId):
 #             message=f"Failed to update last opened time: {e}",
 #             status=400
 #         ), 400
+
+@deck_bp.route('/deck/<id>/export', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def export_deck(id):
+    '''Export a deck and its cards to a JSON file'''
+    try:
+        # Get the deck
+        deck = db.child("deck").child(id).get().val()
+        if not deck:
+            return jsonify(message='Deck not found', status=404), 404
+
+        # Get all cards for this deck
+        cards = db.child("card").order_by_child("deckId").equal_to(id).get()
+        
+        # Prepare export data
+        export_data = {
+            'deck': {
+                'title': deck['title'],
+                'description': deck['description'],
+                'visibility': deck['visibility']
+            },
+            'cards': []
+        }
+
+        # Add cards if they exist
+        if cards.val():
+            for card in cards.each():
+                card_data = card.val()
+                export_data['cards'].append({
+                    'front': card_data.get('front', ''),
+                    'back': card_data.get('back', ''),
+                    'hint': card_data.get('hint', '')
+                })
+
+        # Convert to JSON string and encode
+        json_str = json.dumps(export_data, indent=2)
+        encoded_data = base64.b64encode(json_str.encode()).decode()
+
+        return jsonify({
+            'data': encoded_data,
+            'filename': f"{deck['title'].replace(' ', '_')}.json",
+            'message': 'Deck exported successfully',
+            'status': 200
+        }), 200
+
+    except Exception as e:
+        return jsonify(message=f'Export failed: {e}', status=400), 400
+
+@deck_bp.route('/deck/import', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def import_deck():
+    '''Import a deck and its cards from a JSON file'''
+    try:
+        data = request.get_json()
+        file_content = data.get('fileContent')  # Base64 encoded file content
+        user_id = data.get('userId')
+
+        if not file_content or not user_id:
+            return jsonify(message='Missing required data', status=400), 400
+
+        # Decode the file content
+        try:
+            decoded_content = base64.b64decode(file_content).decode()
+            import_data = json.loads(decoded_content)
+        except:
+            return jsonify(message='Invalid file format', status=400), 400
+
+        # Validate the structure
+        if 'deck' not in import_data or 'cards' not in import_data:
+            return jsonify(message='Invalid file structure', status=400), 400
+
+        # Create the deck
+        deck_data = import_data['deck']
+        deck_data['userId'] = user_id
+        deck_data['cards_count'] = len(import_data['cards'])
+        deck_data['lastOpened'] = None
+        
+        new_deck = db.child("deck").push(deck_data)
+        deck_id = new_deck['name']  # Get the new deck ID
+
+        # Create the cards
+        for card in import_data['cards']:
+            card['deckId'] = deck_id
+            card['userId'] = user_id
+            db.child("card").push(card)
+
+        return jsonify({
+            'deckId': deck_id,
+            'message': 'Deck imported successfully',
+            'status': 201
+        }), 201
+
+    except Exception as e:
+        return jsonify(message=f'Import failed: {e}', status=400), 400
