@@ -99,6 +99,3 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 - [ ] Enable collaborative learning by enabling users to share flashcards seamlessly with friends, classmates, or study groups
 - [ ] Progress tracking by subject and review options like retrying incorrect questions
 - [ ] Chrome Extension feature that enables users to highlight text on websites or online PDFs and instantly create flashcards from their selections.
-
-## License
-[MIT](https://tldrlegal.com/license/mit-license)
