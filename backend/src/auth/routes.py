@@ -80,7 +80,7 @@ def login():
         user = auth.sign_in_with_email_and_password(email, password)
         """if login is successful, this message is displayed"""
         return jsonify(user=user, message="Login Successful", status=200), 200
-    except Exception as _:
+    except Exception:
         """if login is not successful, this message is displayed"""
         return jsonify(message="Login Failed", status=400), 400
 
