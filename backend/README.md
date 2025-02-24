@@ -1,33 +1,126 @@
-# Getting Started with Firebase
+# Backend Installation Guide
 
-To run the backend locally, use the following command:
+1. Clone the repository using the following command:
 
 ```bash
-python3 backend/src/app.py
+git clone https://github.com/CSC510-510/FlashCards
 ```
 
+2. Create a virtual environment using the following command:
 
-## Features:
+```bash
+conda create -n flashcards python=3.12.2
+conda activate flashcards
+```
 
-1. Login and Sign up - Hosted on [Firebase](https://firebase.google.com/)
-                                         
-2. Based on Python-Flask
+3. Install the backend dependencies, navigate to `FlashCards/backend` and run the following command:
+```bash
+pip install -r requirements.txt
+```
 
-## Setting up Firebase:
+4. Make a copy of the `__init__.sample` file and name the new file `__init__.py`
 
-1. Go to [Firebase](https://firebase.google.com/)
-2. Login/Register your account
-3. Click on add project
-4. Give project name
-5. Optional: select google analytics
-6. Create project
-7. Under "Get started by adding Firebase to your app", click on web app
-8. Name the web app and copy the "apiKey", "authDomain", "databaseURL", "storageBucket" from the code given there
-9. Go to login.py and app.py, and add the values you copied above
-10. Go to console, click on Authentication (On the left sidebar), click on sign-in method, and enable email/password sign in
+5. Set up [Firebase](https://firebase.google.com/):
+   - Go to the website
+   - Login/register an account
+   - Click on `Add Project`
+     - Optional: Add Google Analytics to the project
+   - Press `Create Project`
+   - Under the _Get Started by Adding Firebase to your App_, click on `Web App`
+   - Name the web app as you like
+   - Set up the Realtime Database
+     - On the left-side menu, select `All Products`
+     - Select `Realtime Database` and follow the prompts to enable the database for the project
+       - When prompted, select `Start in Locked Mode`
+     - Set up rules for the database
+       - Navigate to the `Rules` tab
+       - Replace the existing ruleset with the below ruleset
+       - Press `Publish`
+         - Ruleset:
+            ```
+            {
+                "rules": {
+                    "folder_deck": {
+                        ".read": true,
+                        ".write": true,
+                        ".indexOn": ["folderId"]
+                    },
+                    "add-deck": {
+                        ".read": true,
+                        ".write": true
+                    },
+                    "addToFolder": {
+                        ".read": true,
+                        ".write": true
+                    },
+                    "folder": {
+                        ".read": true,
+                        ".write": true,
+                        ".indexOn": ["userId"]
+                    },
+                    "folders": {
+                        ".read": true,
+                        ".write": true
+                    },
+                    "deck": {
+                        ".indexOn": ["id", "userId", "visibility"],
+                        ".read": true,
+                        ".write": true
+                    },
+                    "card": {
+                        ".indexOn": ["deckId"],
+                        ".read": true,
+                        ".write": true
+                    },
+                    "leaderboard": {
+                        ".read": true,  // Adjust if needed
+                        ".write": true, // Adjust if needed
+                        ".indexOn": ["deckId", "correct", "lastAttempt"]  // Suitable for sorting
+                    },
+                    "group": {
+                        ".read": true,
+                        ".write": true
+                    },
+                    "sharing": {
+                        ".read": true,
+                        ".write": true
+                    },
+                    "quizAttempts": {
+                        ".read": true,
+                        ".write": true,
+                        ".indexOn" : ["deckId", "userId", "attemptId"]
+                    },
+                    "streaks": {
+                        ".read": true,
+                        ".write": true
+                    },
+                    "messages": {
+                        ".read": true,
+                        ".write": true
+                    },
+                    "notifications": {
+                        ".read": true,
+                        ".write": true
+                    }
+                }
+            }
+            ```
 
+     - From the left-side menu, select `Project Settings`, copy the `apiKey`, `authDomain`, `databaseURL`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`, and `measurementId` values and paste them into the corresponding fields in `__init__.py`
+     - Enable email/password sign-in
+       - Return to the Firebase console
+       - Click on `Authentication` in the left-side bar
+       - Click on `Sign-in Method`
+       - Enable `Email/Password Sign In`
+      
+6. Start the backend API server
+   - Navigate to `FlashCards/backend/src`
+   - Run the following command:
+     - ```bash
+       python api.py
+       ```
 
-## Heroku Deployment Steps
+## Heroku Deployment Steps (optional)
 1. ```heroku login```
 
 2. ```heroku create flashcards-server-api```
