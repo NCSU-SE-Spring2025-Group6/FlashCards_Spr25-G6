@@ -56,14 +56,19 @@ interface LeaderboardEntry {
   lastAttempt: string;
 }
 
+enum PracticeDeckState {
+  VIEWING = "VIEWING",
+  QUIZ = "QUIZ",
+  PRACTICE = "PRACTICE"
+}
+
 const PracticeDeck = () => {
   const navigate = useNavigate();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [cards, setCards] = useState<FlashCard[]>([]);
   const [fetchingDeck, setFetchingDeck] = useState(false);
   const [fetchingCards, setFetchingCards] = useState(false);
-  const [quizMode, setQuizMode] = useState(false);
-  const [frequentlyMissedMode, setFrequentlyMissedMode] = useState(false);
+  const [deckState, setDeckState] = useState<PracticeDeckState>(PracticeDeckState.VIEWING);
   const [leaderboardVisible, setLeaderboardVisible] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
 
@@ -71,32 +76,43 @@ const PracticeDeck = () => {
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
   const { id } = useParams();
 
-  useEffect(() => {
-    fetchDeck();
-  }, []);
+  const handleQuizToggle = () => {
+    setDeckState(current => 
+      current === PracticeDeckState.QUIZ 
+        ? PracticeDeckState.VIEWING 
+        : PracticeDeckState.QUIZ
+    );
+  };
+
+  const handlePracticeToggle = () => {
+    setDeckState(current => 
+      current === PracticeDeckState.PRACTICE 
+        ? PracticeDeckState.VIEWING 
+        : PracticeDeckState.PRACTICE
+    );
+  };
 
   useEffect(() => {
     const fetchCards = async () => {
       setFetchingCards(true);
       try {
         let url: string;
-        if (frequentlyMissedMode) {
+        if (deckState === PracticeDeckState.PRACTICE) {
           url = `/deck/${id}/practice-cards/${localId}`;
         } else {
           url = `/deck/${id}/card/all`;
         }
         const res = await http.get(url);
-        console.debug('Successfully fetched cards:', res.data);  // Debug print
         setCards(res.data?.cards || []);
       } catch (error: any) {
-        console.error('Error fetching cards:', error.response?.data || error.message);  // Error message
-        alert('Failed to fetch cards. Please try again later.');  // Optional user feedback
+        console.error('Error fetching cards:', error.response?.data || error.message);
+        alert('Failed to fetch cards. Please try again later.');
       } finally {
         setFetchingCards(false);
       }
     };
     if (id && localId) fetchCards();
-  }, [frequentlyMissedMode, id, localId]);
+  }, [deckState, id, localId]);
 
   const fetchDeck = async () => {
     setFetchingDeck(true);
@@ -183,21 +199,15 @@ const PracticeDeck = () => {
                     )}
                     <button
                       className="btn btn-white"
-                      onClick={() => {
-                        setFrequentlyMissedMode(false)
-                        setQuizMode(!quizMode)
-                      }}
+                      onClick={handleQuizToggle}
                     >
-                      {quizMode ? "Exit Quiz" : "Take Quiz"}
+                      {deckState === PracticeDeckState.QUIZ ? "Exit Quiz" : "Take Quiz"}
                     </button>
                     <button
                       className="btn btn-white"
-                      onClick={() => {
-                        setFrequentlyMissedMode(!frequentlyMissedMode)
-                        setQuizMode(false)
-                      }}
+                      onClick={handlePracticeToggle}
                     >
-                      {frequentlyMissedMode
+                      {deckState === PracticeDeckState.PRACTICE
                         ? "Leave Practice Mode"
                         : "Practice Frequently Missed Questions"}
                     </button>
@@ -229,14 +239,14 @@ const PracticeDeck = () => {
                     <p>No Cards Available</p>
                   </div>
                 </div>
-              ) : quizMode ? (
+              ) : deckState === PracticeDeckState.QUIZ ? (
                 <Quiz cards={cards} />
               ) : (
                       <>
                         <Flashcard cards={cards} />
 
                         <div className="flashcard-controls mt-3 d-flex gap-2 justify-content-center">
-                          {!quizMode && (
+                          {(
                             <Button 
                               type="primary" 
                               onClick={shuffleCards}
