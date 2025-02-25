@@ -1,5 +1,7 @@
 # Backend Installation Guide
 
+This application uses Firebase as a database, meaning while the application can be ran locally, a connection to the internet is still required for functionality. Heroku can be used if the user wishes to deploy the website online.
+
 1. Clone the repository using the following command:
 
 ```bash
