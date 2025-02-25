@@ -150,6 +150,7 @@ def update_last_opened(id):
         return jsonify(message=f'Failed to update lastOpened: {e}', status=400), 400
 
 
+
 @deck_bp.route('/deck/<deckId>/leaderboard', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_leaderboard(deckId):
@@ -247,6 +248,16 @@ def get_user_score(deckId, userId):
             "status": 400
         }), 400
 
+# @deck_bp.route('/deck/<id>/last-opened', methods=['PATCH'])
+# @cross_origin(supports_credentials=True)
+# def update_last_opened_deck(id):
+#     try:
+#         data = request.get_json()
+#         last_opened_at = data.get('lastOpenedAt')
+        
+#         db.child("deck").child(id).update({
+#             "lastOpenedAt": last_opened_at
+#         })
 
 @deck_bp.route('/deck/<user_id>/record-answer', methods=['POST'])
 @cross_origin(supports_credentials=True)

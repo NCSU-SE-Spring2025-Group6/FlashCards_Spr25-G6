@@ -6,8 +6,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Run the following command to start the frontend server.
 ```
-cd [location of the git repository]/frontend
-npm install
+cd frontend
+npm install -- force
 npm start
 ```
 

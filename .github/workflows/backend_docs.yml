@@ -1,0 +1,40 @@
+name: Generate and Publish Backend Documentation
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12.2'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install sphinx
+      run: |
+        sudo apt update
+        sudo apt install -y python3-sphinx
+
+    - name: Build docs and deploy
+      run: |
+        cd backend/docs && make html
+        touch build/html/.nojekyll
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        branch: gh-pages 
+        folder: backend/docs/build/html
+        token: ${{ secrets.GITHUB_TOKEN }}

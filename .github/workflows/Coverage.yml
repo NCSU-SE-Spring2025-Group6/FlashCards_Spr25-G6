@@ -3,10 +3,10 @@ name: Coverage Report
 on:
   push:
     branches:
-      - main
+      - disable
   pull_request:
     branches:
-      - main
+      - disable
 
 jobs:
   build:
