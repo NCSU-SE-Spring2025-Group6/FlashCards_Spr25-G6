@@ -1,0 +1,10 @@
+flask==3.0.2
+flask-sqlalchemy==3.1.1
+flask-migrate==4.0.5
+flask-cors==4.0.0
+flask-login==0.6.3
+firebase-admin==6.2.0
+python-dotenv==1.0.1
+gunicorn==21.2.0
+markdown==3.5.2
+werkzeug==3.0.1

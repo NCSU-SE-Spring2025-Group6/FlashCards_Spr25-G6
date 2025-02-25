@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./styles.scss";
+import { Button, Modal } from "antd";
 import http from "utils/api"; // Assuming `http` is the instance for API requests
 import { useParams } from "react-router";
 
@@ -14,12 +15,23 @@ export default function Quiz({ cards }: QuizProps) {
   const [isQuizFinished, setIsQuizFinished] = useState(false);
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
+  const [showHint, setShowHint] = useState(false);
+  const [hintUsed, setHintUsed] = useState(false);
   const { id } = useParams();
   const currentCard = cards[currentCardIndex];
+
+  const handleHintModal = () => {
+    if (!showHint) {
+      setHintUsed(true);
+    }
+    setShowHint(!showHint);
+  };
 
   useEffect(() => {
     if (currentCard) {
       setShuffledOptions(shuffleOptions(cards, currentCard.back));
+      setShowHint(false);
+      setHintUsed(false);
     }
   }, [currentCard, cards]);
 
@@ -33,15 +45,38 @@ export default function Quiz({ cards }: QuizProps) {
     return shuffled;
   }
 
+  const recordWrongAnswer = async (card: {front: string, back: string, hint: string}) => {
+    const flashCardUser = window.localStorage.getItem("flashCardUser");
+
+    const { localId = "", email = "" } = flashCardUser ? JSON.parse(flashCardUser) : {};
+
+    if (localId) {
+      try {
+        await http.post(`/deck/${id}/record-wrong-answer`, {
+          userId: localId,
+          front: card.front,
+          back: card.back,
+          hint: card.hint,
+        });
+        console.log("Recorded successfully")
+      } catch (error) {
+        console.error("Error recording wrong answer:", error);
+      }
+    }
+  };
+
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     const isCorrect = option === currentCard.back;
-    
-    // Update the score and incorrectAnswers based on the user's selection
+    let delta = 0;
+    let incorrectDelta = 0;
+
     if (isCorrect) {
-      setScore((prevScore) => prevScore + 1);
+      delta = hintUsed ? 0.5 : 1; // Use hintUsed instead of showHint
+      setScore((prev) => prev + delta);
     } else {
-      setIncorrectAnswers((prevIncorrect) => prevIncorrect + 1);
+      incorrectDelta = 1;
+      setIncorrectAnswers((prev) => prev + incorrectDelta);
     }
 
     setTimeout(() => {
@@ -49,13 +84,13 @@ export default function Quiz({ cards }: QuizProps) {
       if (currentCardIndex + 1 < cards.length) {
         setCurrentCardIndex((prevIndex) => prevIndex + 1);
       } else {
-        // Quiz is finished; call updateLeaderboard here
+        const finalScore = score + delta;
+        const finalIncorrect = incorrectAnswers + incorrectDelta;
         setIsQuizFinished(true);
-        updateLeaderboard(score + (isCorrect ? 1 : 0), incorrectAnswers + (isCorrect ? 0 : 1));
+        updateLeaderboard(finalScore, finalIncorrect);
       }
     }, 1000);
   };
-
   // Update leaderboard function
   const updateLeaderboard = async (finalScore: number, finalIncorrectAnswers: number) => {
     const flashCardUser = window.localStorage.getItem("flashCardUser");
@@ -103,20 +138,47 @@ export default function Quiz({ cards }: QuizProps) {
 
   return (
     <div className="quiz-container">
-      <h2>{currentCard.front}</h2>
+      <div className="quiz-question-header">
+        <h2>{currentCard.front}</h2>
+        {currentCard.hint && (
+          <Button 
+            type="link"
+            onClick={handleHintModal}
+            className="hint-button"
+          >
+            {showHint ? 'Hide Hint' : 'Show Hint'}
+          </Button>
+        )}
+      </div>
+
+      <Modal
+        title="Hint"
+        open={showHint}
+        onCancel={handleHintModal}
+        footer={[
+          <Button key="close" onClick={handleHintModal}>
+            Close
+          </Button>
+        ]}
+        width={600}
+      >
+        <div className="hint-content">
+          <p>{currentCard.hint}</p>
+        </div>
+      </Modal>
       <div className="options">
         {shuffledOptions.map((option, index) => (
           <button
             key={index}
             className={`option-btn ${
               selectedOption
-                ? option === currentCard.back
-                  ? "highlight-correct"
-                  : selectedOption === option
-                  ? "highlight-incorrect"
-                  : ""
-                : ""
-            }`}
+              ? option === currentCard.back
+              ? "highlight-correct"
+              : selectedOption === option
+              ? "highlight-incorrect"
+              : ""
+              : ""
+              }`}
             onClick={() => handleOptionClick(option)}
             disabled={!!selectedOption}
           >

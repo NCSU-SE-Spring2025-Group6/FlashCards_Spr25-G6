@@ -57,3 +57,32 @@
     color: white;
   }
 }
+
+.hint-content {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+
+  p {
+    margin: 0;
+  }
+}
+
+.quiz-question-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+
+  .hint-button {
+    font-size: 14px;
+    padding-left: 0;
+  }
+}
+.quiz-hint {
+  background: #f8f9fa;
+  border-left: 4px solid #1890ff;
+  padding: 15px;
+  margin-bottom: 25px;
+  border-radius: 4px;
+}

@@ -341,3 +341,13 @@
     display: flex;
     gap: 10px;
   }
+
+.flashcard-controls {
+  margin-top: 20px;
+
+  .shuffle-button {
+    padding: 8px 25px;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+}

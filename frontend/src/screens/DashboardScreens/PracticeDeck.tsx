@@ -1,36 +1,17 @@
-/*
-MIT License
-
-Copyright (c) 2022 John Damilola, Leo Hsiang, Swarangi Gaurkar, Kritika Javali, Aaron Dias Barreto
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
-import { Card, Modal, Button, Table } from "antd";
+import { Card, Modal, Button, Table, Progress, Radio, Space, message } from "antd";
 import Flashcard from "components/PracticeDeck";
-import Quiz from "components/QuizDeck"; // Importing the new Quiz component
+import Quiz from "components/QuizDeck";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { PropagateLoader } from "react-spinners";
 import EmptyImg from "assets/images/empty.svg";
 import http from "utils/api";
 import "./styles.scss";
+
+import { Form, InputNumber, Typography } from "antd";
+import { SmileOutlined, MehOutlined, FrownOutlined } from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 interface Deck {
   id: string;
@@ -41,6 +22,7 @@ interface Deck {
 }
 
 interface FlashCard {
+  id: string;
   front: string;
   back: string;
   hint: string;
@@ -54,56 +36,147 @@ interface LeaderboardEntry {
   lastAttempt: string;
 }
 
+enum PracticeDeckState {
+  VIEWING = "VIEWING",
+  QUIZ = "QUIZ",
+  PRACTICE = "PRACTICE"
+}
+
 const PracticeDeck = () => {
   const navigate = useNavigate();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [cards, setCards] = useState<FlashCard[]>([]);
   const [fetchingDeck, setFetchingDeck] = useState(false);
   const [fetchingCards, setFetchingCards] = useState(false);
-  const [quizMode, setQuizMode] = useState(false);
+  const [deckState, setDeckState] = useState<PracticeDeckState>(PracticeDeckState.VIEWING);
   const [leaderboardVisible, setLeaderboardVisible] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+
+  // SRS-specific states
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [showRating, setShowRating] = useState(false);
 
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
   const { id } = useParams();
 
+  const handleQuizToggle = () => {
+    setDeckState(current => 
+      current === PracticeDeckState.QUIZ 
+        ? PracticeDeckState.VIEWING 
+        : PracticeDeckState.QUIZ
+    );
+  };
+
+  const handlePracticeToggle = () => {
+    if (deckState !== PracticeDeckState.PRACTICE) {
+      // Reset SRS practice session state when entering practice mode
+      setCurrentCardIndex(0);
+      setShowAnswer(false);
+      setShowRating(false);
+    }
+    
+    setDeckState(current => 
+      current === PracticeDeckState.PRACTICE 
+        ? PracticeDeckState.VIEWING 
+        : PracticeDeckState.PRACTICE
+    );
+  };
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      setFetchingCards(true);
+      try {
+        let url: string;
+        if (deckState === PracticeDeckState.PRACTICE) {
+          // Fetch cards due for review based on SM-2 algorithm
+          url = `/deck/${id}/practice-cards/${localId}`;
+        } else {
+          url = `/deck/${id}/card/all`;
+        }
+        const res = await http.get(url);
+        setCards(res.data?.cards || []);
+      } catch (error: any) {
+        console.error('Error fetching cards:', error.response?.data || error.message);
+        message.error('Failed to fetch cards. Please try again later.');
+      } finally {
+        setFetchingCards(false);
+      }
+    };
+    
+    if (id && localId) fetchCards();
+  }, [deckState, id, localId]);
+
   useEffect(() => {
     fetchDeck();
-    fetchCards();
-  }, []);
+  }, [id]);
 
   const fetchDeck = async () => {
     setFetchingDeck(true);
     try {
       const res = await http.get(`/deck/${id}`);
       setDeck(res.data?.deck);
+    } catch (error) {
+      console.error('Error fetching deck:', error);
+      message.error('Failed to fetch deck details');
     } finally {
       setFetchingDeck(false);
     }
   };
 
-  const fetchCards = async () => {
-    setFetchingCards(true);
+  // https://github.com/thyagoluciano/sm2
+  const recordSRSAnswer = async (quality: number) => {
     try {
-      const res = await http.get(`/deck/${id}/card/all`);
-      setCards(res.data?.cards || []);
-    } finally {
-      setFetchingCards(false);
+      const currentCard = cards[currentCardIndex];
+
+      await http.post(`/deck/${localId}/record-answer`, {
+        userId: localId,
+        front: currentCard.front,
+        back: currentCard.back,
+        hint: currentCard.hint,
+        quality: quality
+      });
+
+      message.success("Progress updated!");
+
+      if (currentCardIndex < cards.length - 1) {
+        setCurrentCardIndex(prev => prev + 1);
+        setShowAnswer(false);
+        setShowRating(false);
+      } else {
+        message.info("You've completed all practice cards!");
+        setDeckState(PracticeDeckState.VIEWING);
+      }
+    } catch (error) {
+      console.error("Error recording answer:", error);
+      message.error("Failed to record answer. Please try again.");
     }
+  };
+
+  const shuffleCards = () => {
+    const shuffled = [...cards];
+    // Fisher-Yates shuffle algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    setCards(shuffled);
   };
 
   const fetchLeaderboard = async () => {
     try {
       const res = await http.get(`/deck/${id}/leaderboard`);
-      // Format lastAttempt before setting leaderboard data
-      const formattedLeaderboard = (res.data?.leaderboard || []).map((entry: { lastAttempt: string | number | Date; }) => ({
-        ...entry,
-        lastAttempt: new Date(entry.lastAttempt).toLocaleString(), // Convert to human-readable format
-      }));
+      const formattedLeaderboard = (res.data?.leaderboard || []).map(
+        (entry: { lastAttempt: string | number | Date }) => ({
+          ...entry,
+          lastAttempt: new Date(entry.lastAttempt).toLocaleString(),
+        })
+      );
       setLeaderboardData(formattedLeaderboard);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
+      message.error("Failed to fetch leaderboard data");
     }
   };
 
@@ -118,14 +191,126 @@ const PracticeDeck = () => {
 
   const leaderboardColumns = [
     {
-      title: "Rank", // New column for rank
-      render: (_: any, __: any, index: number) => index + 1, // Automatically generates the row number
-      key: "rank"
+      title: "Rank",
+      render: (_: any, __: any, index: number) => index + 1,
+      key: "rank",
     },
     { title: "Email", dataIndex: "userEmail", key: "userEmail" },
     { title: "Correct Answers", dataIndex: "correct", key: "correct" },
-    { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" }
+    { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" },
   ];
+
+  // Render SRS practice mode card
+  const renderPracticeCard = () => {
+    if (cards.length === 0) {
+      return (
+        <div className="row justify-content-center empty-pane">
+          <div className="text-center">
+            <img className="img-fluid" src={EmptyImg} alt="No cards available" />
+            <p>No cards due for review</p>
+          </div>
+        </div>
+      );
+    }
+
+    const currentCard = cards[currentCardIndex];
+
+    return (
+      <Card className="srs-card">
+        <div className="srs-card-progress">
+          <Progress 
+            percent={Math.round((currentCardIndex / cards.length) * 100)} 
+            size="small" 
+          />
+          <Text type="secondary">
+            Card {currentCardIndex + 1} of {cards.length}
+          </Text>
+        </div>
+
+        <div className="srs-card-content">
+          <div className="srs-card-front">
+            <Title level={4}>Question:</Title>
+            <div className="srs-card-text">{currentCard.front}</div>
+            {currentCard.hint && (
+              <div className="srs-card-hint">
+                <Text type="secondary">Hint: {currentCard.hint}</Text>
+              </div>
+            )}
+          </div>
+
+          {showAnswer && (
+            <div className="srs-card-back">
+              <Title level={4}>Answer:</Title>
+              <div className="srs-card-text">{currentCard.back}</div>
+            </div>
+          )}
+
+          <div className="srs-card-actions">
+            {!showAnswer && (
+              <Button 
+                type="primary" 
+                onClick={() => {
+                  setShowAnswer(true);
+                  setShowRating(true);
+                }}
+              >
+                Show Answer
+              </Button>
+            )}
+
+            {showRating && (
+              <div className="srs-rating-container">
+                <Title level={5}>How well did you know this on a scale from 0 to 5?</Title>
+                <Radio.Group 
+                  onChange={(e) => recordSRSAnswer(e.target.value)} 
+                  className="srs-rating-options"
+                >
+                  <Space direction="vertical">
+                    <Radio value={0}>
+                      <Space>
+                        <FrownOutlined style={{ color: 'red' }} />
+                        <span>Complete blackout (0)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={1}>
+                      <Space>
+                        <FrownOutlined style={{ color: 'orange' }} />
+                        <span>Incorrect - Barely recognized (1)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={2}>
+                      <Space>
+                        <MehOutlined style={{ color: 'gold' }} />
+                        <span>Incorrect - But recognized answer (2)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={3}>
+                      <Space>
+                        <MehOutlined style={{ color: 'lightgreen' }} />
+                        <span>Correct - But difficult recall (3)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={4}>
+                      <Space>
+                        <SmileOutlined style={{ color: 'green' }} />
+                        <span>Correct - After some hesitation (4)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={5}>
+                      <Space>
+                        <SmileOutlined style={{ color: 'darkgreen' }} />
+                        <span>Perfect recall (5)</span>
+                      </Space>
+                    </Radio>
+                  </Space>
+                </Radio.Group>
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    );
+  };
 
   const { title, description, userId } = deck || {};
 
@@ -144,7 +329,9 @@ const PracticeDeck = () => {
                         onClick={() => navigate(-1)}
                       ></i>
                     </h3>
-                    <h3><b>{title}</b></h3>
+                    <h3>
+                      <b>{title}</b>
+                    </h3>
                     <p>{description}</p>
                   </div>
                   <div className="d-flex gap-2">
@@ -155,9 +342,17 @@ const PracticeDeck = () => {
                     )}
                     <button
                       className="btn btn-white"
-                      onClick={() => setQuizMode(!quizMode)}
+                      onClick={handleQuizToggle}
                     >
-                      {quizMode ? "Exit Quiz" : "Take Quiz"}
+                      {deckState === PracticeDeckState.QUIZ ? "Exit Quiz" : "Take Quiz"}
+                    </button>
+                    <button
+                      className="btn btn-white"
+                      onClick={handlePracticeToggle}
+                    >
+                      {deckState === PracticeDeckState.PRACTICE
+                        ? "Leave Practice Mode"
+                        : "Practice with Spaced Repetition"}
                     </button>
                     <button
                       className="btn btn-white"
@@ -180,24 +375,30 @@ const PracticeDeck = () => {
                 >
                   <PropagateLoader color="#221daf" />
                 </div>
-              ) : cards.length === 0 ? (
-                <div className="row justify-content-center empty-pane">
-                  <div className="text-center">
-                    <img className="img-fluid" src={EmptyImg} />
-                    <p>No Cards Added Yet</p>
-                  </div>
-                </div>
-              ) : quizMode ? (
-                <Quiz cards={cards} /> // Render quiz mode
+              ) : deckState === PracticeDeckState.QUIZ ? (
+                <Quiz cards={cards} />
+              ) : deckState === PracticeDeckState.PRACTICE ? (
+                renderPracticeCard()
               ) : (
-                <Flashcard cards={cards} />
+                <>
+                  <Flashcard cards={cards} />
+                  <div className="flashcard-controls mt-3 d-flex gap-2 justify-content-center">
+                    <Button 
+                      type="primary" 
+                      onClick={shuffleCards}
+                      className="shuffle-button"
+                      style={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      Shuffle Cards
+                    </Button>
+                  </div>
+                </>
               )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Leaderboard Modal */}
       <Modal
         title="Leaderboard"
         open={leaderboardVisible}
@@ -207,15 +408,15 @@ const PracticeDeck = () => {
             Close
           </Button>,
         ]}
-        width="80%" // Set a width for the modal
-        style={{ maxHeight: '80vh', overflowY: 'auto' }} // Allow for scroll if content is too tall
-        bodyStyle={{ padding: '0' }} // Optionally adjust padding
+        width="80%"
+        style={{ maxHeight: "80vh", overflowY: "auto" }}
+        bodyStyle={{ padding: "0" }}
       >
         <Table
           columns={leaderboardColumns}
           dataSource={leaderboardData}
           pagination={false}
-          rowKey="userEmail"  // Ensure a unique key for each row
+          rowKey="userEmail"
         />
       </Modal>
     </div>
