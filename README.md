@@ -72,7 +72,7 @@ pip3 install .
 - **Backend** -> [See README.md](backend/README.md)
 - **Frontend** -> [See README.md](frontend/README.md)
 
-## Current Screens
+## Showcase
 
 <p style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; ">
   <img src="./images/dashboard.png" alt="Demo Screens 1" width="250px" height="250px style="object-fit: cover;" />
@@ -83,31 +83,3 @@ pip3 install .
   <img src="./images/quiz complete.png" alt="Demo Screens 6" width="250px" height="250px style="object-fit: cover;" />
   <img src="./images/leaderboard.png" alt="Demo Screens 7" width="250px" height="250px style="object-fit: cover;" />
 </p>
-
-
-
-## Future Roadmap [See here](https://github.com/users/JohnDamilola/projects/1)
-### Phase 1:
-- [x] Create database ER diagram
-- [x] User Login
-- [x] User Signup/Create Account
-- [x] Explore or Search Public FlashCards
-- [x] Create/Read/Update/Delete <b>Decks</b> <i>(collections of cards)</i>
-- [x] Create/Read/Update/Delete <b>Cards</b>
-- [x] FlashCard Practice Mode
-- [x] Add Unit testing
-- [x] Setup backend and frontend deployment
-
-### Phase 2:
-- [x] Add slider to navigate through the decks
-- [x] Folder Creation
-- [x] Add decks to the folders, and redirect them to the Practice Deck on click
-- [x] Quiz mode 
-- [x] Show recently visited decks on dashboard
-- [x] Leaderboard that shows the email, count of correct and incorrect answers, and rank of a particular user.
-
-### Phase 3:
-- [ ] Add a dashboard providing insights on study habits, quiz results over time, and areas needing improvement, helping users to plan their study strategy.
-- [ ] Enable collaborative learning by enabling users to share flashcards seamlessly with friends, classmates, or study groups
-- [ ] Progress tracking by subject and review options like retrying incorrect questions
-- [ ] Chrome Extension feature that enables users to highlight text on websites or online PDFs and instantly create flashcards from their selections.

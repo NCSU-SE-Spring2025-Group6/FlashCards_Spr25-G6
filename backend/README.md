@@ -1,26 +1,8 @@
 # Backend Installation Guide
 
-1. Clone the repository using the following command:
+1. Make a copy of the `__init__.sample` file and name the new file `__init__.py`
 
-```bash
-git clone https://github.com/CSC510-510/FlashCards
-```
-
-2. Create a virtual environment using the following command:
-
-```bash
-conda create -n flashcards python=3.12.2
-conda activate flashcards
-```
-
-3. Install the backend dependencies, navigate to `FlashCards/backend` and run the following command:
-```bash
-pip install -r requirements.txt
-```
-
-4. Make a copy of the `__init__.sample` file and name the new file `__init__.py`
-
-5. Set up [Firebase](https://firebase.google.com/):
+2. Set up [Firebase](https://firebase.google.com/):
    - Go to the website
    - Login/register an account
    - Click on `Add Project`
@@ -113,7 +95,7 @@ pip install -r requirements.txt
        - Click on `Sign-in Method`
        - Enable `Email/Password Sign In`
       
-6. Start the backend API server
+3. Start the backend API server
    - Navigate to `FlashCards/backend/src`
    - Run the following command:
      - ```bash
