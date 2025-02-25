@@ -1,14 +1,13 @@
 import pyrebase
 
 config = {
-  'apiKey': "AIzaSyActLE7dqVJxJ0lzhpxvupmWAYHy45AmKU",
-  'authDomain': "flashcards-4917d.firebaseapp.com",
-  'databaseURL': "https://flashcards-4917d-default-rtdb.firebaseio.com",
-  'projectId': "flashcards-4917d",
-  'storageBucket': "flashcards-4917d.firebasestorage.app",
-  'messagingSenderId': "472315504098",
-  'appId': "1:472315504098:web:5effa3e1458ddd716945bb",
-  'measurementId': "G-GFCSP4EZEZ",
+    "apiKey": "AIzaSyDxfVzHaoppp5RM_MwxWJjkZUAA-3iqKhM",
+    "authDomain": "flashcardsv-2.firebaseapp.com",
+    "databaseURL": "https://flashcardsv-2-default-rtdb.firebaseio.com/",
+    "projectId": "flashcardsv-2",
+    "storageBucket": "flashcardsv-2.appspot.com",
+    "messagingSenderId": "202182151892",
+    "appId": "1:202182151892:web:c72d2f4960a321381f7541",
+    "measurementId": "G-GFCSP4EZEZ",
 }
-
 firebase = pyrebase.initialize_app(config)
