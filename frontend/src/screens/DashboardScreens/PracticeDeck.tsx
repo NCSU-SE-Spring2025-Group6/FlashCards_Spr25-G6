@@ -1,29 +1,4 @@
-/*
-MIT License
-
-Copyright (c) 2022 John Damilola, Leo Hsiang, Swarangi Gaurkar, Kritika Javali, Aaron Dias 
-Barreto
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
-import { Card, Modal, Button, Table } from "antd";
+import { Card, Modal, Button, Table, Progress, Radio, Space, message } from "antd";
 import Flashcard from "components/PracticeDeck";
 import Quiz from "components/QuizDeck";
 import { useEffect, useState } from "react";
@@ -32,6 +7,11 @@ import { PropagateLoader } from "react-spinners";
 import EmptyImg from "assets/images/empty.svg";
 import http from "utils/api";
 import "./styles.scss";
+
+import { Form, InputNumber, Typography } from "antd";
+import { SmileOutlined, MehOutlined, FrownOutlined } from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 interface Deck {
   id: string;
@@ -72,6 +52,11 @@ const PracticeDeck = () => {
   const [leaderboardVisible, setLeaderboardVisible] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
 
+  // SRS-specific states
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [showRating, setShowRating] = useState(false);
+
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
   const { id } = useParams();
@@ -85,6 +70,13 @@ const PracticeDeck = () => {
   };
 
   const handlePracticeToggle = () => {
+    if (deckState !== PracticeDeckState.PRACTICE) {
+      // Reset SRS practice session state when entering practice mode
+      setCurrentCardIndex(0);
+      setShowAnswer(false);
+      setShowRating(false);
+    }
+    
     setDeckState(current => 
       current === PracticeDeckState.PRACTICE 
         ? PracticeDeckState.VIEWING 
@@ -98,6 +90,7 @@ const PracticeDeck = () => {
       try {
         let url: string;
         if (deckState === PracticeDeckState.PRACTICE) {
+          // Fetch cards due for review based on SM-2 algorithm
           url = `/deck/${id}/practice-cards/${localId}`;
         } else {
           url = `/deck/${id}/card/all`;
@@ -106,21 +99,58 @@ const PracticeDeck = () => {
         setCards(res.data?.cards || []);
       } catch (error: any) {
         console.error('Error fetching cards:', error.response?.data || error.message);
-        alert('Failed to fetch cards. Please try again later.');
+        message.error('Failed to fetch cards. Please try again later.');
       } finally {
         setFetchingCards(false);
       }
     };
+    
     if (id && localId) fetchCards();
   }, [deckState, id, localId]);
+
+  useEffect(() => {
+    fetchDeck();
+  }, [id]);
 
   const fetchDeck = async () => {
     setFetchingDeck(true);
     try {
       const res = await http.get(`/deck/${id}`);
       setDeck(res.data?.deck);
+    } catch (error) {
+      console.error('Error fetching deck:', error);
+      message.error('Failed to fetch deck details');
     } finally {
       setFetchingDeck(false);
+    }
+  };
+
+  // https://github.com/thyagoluciano/sm2
+  const recordSRSAnswer = async (quality: number) => {
+    try {
+      const currentCard = cards[currentCardIndex];
+
+      await http.post(`/deck/${localId}/record-answer`, {
+        userId: localId,
+        front: currentCard.front,
+        back: currentCard.back,
+        hint: currentCard.hint,
+        quality: quality
+      });
+
+      message.success("Progress updated!");
+
+      if (currentCardIndex < cards.length - 1) {
+        setCurrentCardIndex(prev => prev + 1);
+        setShowAnswer(false);
+        setShowRating(false);
+      } else {
+        message.info("You've completed all practice cards!");
+        setDeckState(PracticeDeckState.VIEWING);
+      }
+    } catch (error) {
+      console.error("Error recording answer:", error);
+      message.error("Failed to record answer. Please try again.");
     }
   };
 
@@ -146,6 +176,7 @@ const PracticeDeck = () => {
       setLeaderboardData(formattedLeaderboard);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
+      message.error("Failed to fetch leaderboard data");
     }
   };
 
@@ -168,6 +199,118 @@ const PracticeDeck = () => {
     { title: "Correct Answers", dataIndex: "correct", key: "correct" },
     { title: "Incorrect Answers", dataIndex: "incorrect", key: "incorrect" },
   ];
+
+  // Render SRS practice mode card
+  const renderPracticeCard = () => {
+    if (cards.length === 0) {
+      return (
+        <div className="row justify-content-center empty-pane">
+          <div className="text-center">
+            <img className="img-fluid" src={EmptyImg} alt="No cards available" />
+            <p>No cards due for review</p>
+          </div>
+        </div>
+      );
+    }
+
+    const currentCard = cards[currentCardIndex];
+
+    return (
+      <Card className="srs-card">
+        <div className="srs-card-progress">
+          <Progress 
+            percent={Math.round((currentCardIndex / cards.length) * 100)} 
+            size="small" 
+          />
+          <Text type="secondary">
+            Card {currentCardIndex + 1} of {cards.length}
+          </Text>
+        </div>
+
+        <div className="srs-card-content">
+          <div className="srs-card-front">
+            <Title level={4}>Question:</Title>
+            <div className="srs-card-text">{currentCard.front}</div>
+            {currentCard.hint && (
+              <div className="srs-card-hint">
+                <Text type="secondary">Hint: {currentCard.hint}</Text>
+              </div>
+            )}
+          </div>
+
+          {showAnswer && (
+            <div className="srs-card-back">
+              <Title level={4}>Answer:</Title>
+              <div className="srs-card-text">{currentCard.back}</div>
+            </div>
+          )}
+
+          <div className="srs-card-actions">
+            {!showAnswer && (
+              <Button 
+                type="primary" 
+                onClick={() => {
+                  setShowAnswer(true);
+                  setShowRating(true);
+                }}
+              >
+                Show Answer
+              </Button>
+            )}
+
+            {showRating && (
+              <div className="srs-rating-container">
+                <Title level={5}>How well did you know this on a scale from 0 to 5?</Title>
+                <Radio.Group 
+                  onChange={(e) => recordSRSAnswer(e.target.value)} 
+                  className="srs-rating-options"
+                >
+                  <Space direction="vertical">
+                    <Radio value={0}>
+                      <Space>
+                        <FrownOutlined style={{ color: 'red' }} />
+                        <span>Complete blackout (0)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={1}>
+                      <Space>
+                        <FrownOutlined style={{ color: 'orange' }} />
+                        <span>Incorrect - Barely recognized (1)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={2}>
+                      <Space>
+                        <MehOutlined style={{ color: 'gold' }} />
+                        <span>Incorrect - But recognized answer (2)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={3}>
+                      <Space>
+                        <MehOutlined style={{ color: 'lightgreen' }} />
+                        <span>Correct - But difficult recall (3)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={4}>
+                      <Space>
+                        <SmileOutlined style={{ color: 'green' }} />
+                        <span>Correct - After some hesitation (4)</span>
+                      </Space>
+                    </Radio>
+                    <Radio value={5}>
+                      <Space>
+                        <SmileOutlined style={{ color: 'darkgreen' }} />
+                        <span>Perfect recall (5)</span>
+                      </Space>
+                    </Radio>
+                  </Space>
+                </Radio.Group>
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    );
+  };
 
   const { title, description, userId } = deck || {};
 
@@ -209,7 +352,7 @@ const PracticeDeck = () => {
                     >
                       {deckState === PracticeDeckState.PRACTICE
                         ? "Leave Practice Mode"
-                        : "Practice Frequently Missed Questions"}
+                        : "Practice with Spaced Repetition"}
                     </button>
                     <button
                       className="btn btn-white"
@@ -232,32 +375,24 @@ const PracticeDeck = () => {
                 >
                   <PropagateLoader color="#221daf" />
                 </div>
-              ) : cards.length === 0 ? (
-                <div className="row justify-content-center empty-pane">
-                  <div className="text-center">
-                    <img className="img-fluid" src={EmptyImg} />
-                    <p>No Cards Available</p>
-                  </div>
-                </div>
               ) : deckState === PracticeDeckState.QUIZ ? (
                 <Quiz cards={cards} />
+              ) : deckState === PracticeDeckState.PRACTICE ? (
+                renderPracticeCard()
               ) : (
-                      <>
-                        <Flashcard cards={cards} />
-
-                        <div className="flashcard-controls mt-3 d-flex gap-2 justify-content-center">
-                          {(
-                            <Button 
-                              type="primary" 
-                              onClick={shuffleCards}
-                              className="shuffle-button"
-                              style={{ display: 'flex', alignItems: 'center' }}
-                            >
-                              Shuffle Cards
-                            </Button>
-                          )}
-                        </div>
-                      </>
+                <>
+                  <Flashcard cards={cards} />
+                  <div className="flashcard-controls mt-3 d-flex gap-2 justify-content-center">
+                    <Button 
+                      type="primary" 
+                      onClick={shuffleCards}
+                      className="shuffle-button"
+                      style={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      Shuffle Cards
+                    </Button>
+                  </div>
+                </>
               )}
             </div>
           </div>

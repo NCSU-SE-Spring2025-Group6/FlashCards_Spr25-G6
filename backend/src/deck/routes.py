@@ -23,7 +23,7 @@
 '''routes.py is a file in deck folder that has all the functions defined that manipulate the deck. All CRUD functions are defined here.'''
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 try:
     from .. import firebase
@@ -150,7 +150,6 @@ def update_last_opened(id):
         return jsonify(message=f'Failed to update lastOpened: {e}', status=400), 400
 
 
-
 @deck_bp.route('/deck/<deckId>/leaderboard', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_leaderboard(deckId):
@@ -211,6 +210,7 @@ def update_leaderboard(deck_id):
     except Exception as e:
         return jsonify({"message": "Failed to update leaderboard", "error": str(e)}), 500
 
+
 @deck_bp.route('/deck/<deckId>/user-score/<userId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_user_score(deckId, userId):
@@ -248,80 +248,210 @@ def get_user_score(deckId, userId):
         }), 400
 
 
-@deck_bp.route('/deck/<deck_id>/record-wrong-answer', methods=['POST'])
+@deck_bp.route('/deck/<user_id>/record-answer', methods=['POST'])
 @cross_origin(supports_credentials=True)
-def record_wrong_answer(deck_id):
-    '''Record a card that a user answered incorrectly using front/back pair'''
+def record_answer(user_id):
+    '''Update card progress using SM-2 algorithm with frontend-provided ease'''
     try:
         data = request.get_json()
-        user_id = data.get("userId")
         front = data.get("front")
         back = data.get("back")
         hint = data.get("hint")
-        timestamp = datetime.now().isoformat()
+        quality = data.get("quality")
 
-        if None in (user_id, front, back, hint):
+        if None in (user_id, front, back, hint, quality):
             return jsonify({"message": "All fields must be provided"}), 400
 
-        # Find card ID by front/back pair in this deck
+        # Find card by front/back/hint
         query_result = db.child("card").order_by_child("front").equal_to(front).get()
-        
-        card_id = None
-        for card in query_result.each():
-            if card.val().get('back') == back and card.val().get('hint') == hint:
-                card_id = card.key()
-                break
+        card_id = next((card.key() for card in query_result.each() 
+                      if card.val().get('back') == back and card.val().get('hint') == hint), None)
+        print('user id', user_id)
+        print('card_id', card_id)
 
         if not card_id:
-            return jsonify({"message": "Card not found in this deck"}), 404
+            return jsonify({"message": "Card not found"}), 404
 
-        ref = db.child("wrong_answers").child(user_id).child(deck_id).child(card_id)
-        ref.push(timestamp)
+        progress_ref = db.child("user_card_progress").child(user_id).child(card_id)
 
-        return jsonify({"message": "Wrong answer recorded successfully"}), 200
+        progress = progress_ref.get().val() or {
+            "interval": 1,
+            "repetitions": 0,
+            "ease_factor": 2.5,
+            "next_review": datetime.now(timezone.utc).isoformat()
+        }
+
+        # Extract current values
+        current_interval = progress["interval"]
+        current_repetitions = progress["repetitions"]
+        current_ease = progress["ease_factor"]
+
+        # https://github.com/thyagoluciano/sm2
+        if quality < 3:  # Incorrect or needs retry
+            new_interval = 1
+            new_repetitions = 0
+            new_ease = max(1.3, current_ease - 0.2)
+            next_review_delta = timedelta(days=1)
+        else:  # Correct answer
+            new_repetitions = current_repetitions + 1
+
+            # Calculate interval
+            if current_repetitions == 0:
+                new_interval = 1
+            elif current_repetitions == 1:
+                new_interval = 6
+            else:
+                new_interval = round(current_interval * current_ease, 2)
+
+            # Calculate new ease factor (SM-2 formula)
+            quality_bonus = 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)
+            new_ease = max(1.3, current_ease + quality_bonus)
+            next_review_delta = timedelta(days=new_interval)
+
+        progress_update = {
+            "interval": new_interval,
+            "repetitions": new_repetitions,
+            "ease_factor": new_ease,
+            "next_review": (datetime.now(timezone.utc) + next_review_delta).isoformat(),
+            "last_review": datetime.now(timezone.utc).isoformat()
+        }
+
+        db.child("user_card_progress").child(user_id).child(card_id).update(progress_update)
+
+        return jsonify({
+            "message": "Progress updated",
+            "nextReview": progress_update["next_review"],
+            "newInterval": new_interval,
+            "newEase": new_ease
+        }), 200
 
     except Exception as e:
-        return jsonify({"message": f"Failed to record wrong answer: {e}", "status": 400}), 400
+        return jsonify({"message": f"Error: {str(e)}"}), 500
 
 
 @deck_bp.route('/deck/<deck_id>/practice-cards/<user_id>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_practice_cards(deck_id, user_id):
-    '''Get N most frequently missed cards for a user in a deck'''
+    '''Get cards due for review using spaced repetition'''
     try:
-        # Get N from query params, default to 10
-        n = request.args.get('limit', default=10, type=int)
+        deck_cards = db.child("card").order_by_child("deckId").equal_to(deck_id).get()
+        card_ids = [card.key() for card in deck_cards.each()]
 
-        # Get all wrong answers for this user and deck
-        wrong_answers = db.child("wrong_answers").child(user_id).child(deck_id).get()
-
-        if not wrong_answers.val():
-            return jsonify({"message": "No incorrect answers found. Keep rocking!"}), 200
-
-        # Count occurrences of each card
-        card_frequencies = {}
-        for card_id, data in wrong_answers.val().items():
-            if db.child("card").child(card_id).get():
-                card_frequencies[card_id] = len(data)
-
-        # Sort by frequency and take top N
-        most_missed_cards = sorted(
-            card_frequencies.items(), 
-            key=lambda x: x[1], 
-            reverse=True
-        )[:n]
+        progress_ref = db.child("user_card_progress").child(user_id).get()
+        all_progress = progress_ref.val() or {}
 
         practice_cards = []
-        for card_id, frequency in most_missed_cards:
-            card = db.child("card").child(card_id).get()
-            if card.val() and frequency > 0:
-                card_data = card.val()
-                practice_cards.append(card_data)
+        now = datetime.now(timezone.utc)  # Use UTC consistently
+
+        for card_id in card_ids:
+            card_data = db.child("card").child(card_id).get().val()
+            progress = all_progress.get(card_id)
+
+            if not progress:
+                practice_cards.append({
+                    **card_data,
+                    "progress": None,
+                    "due_date": datetime.min.isoformat()
+                })
+                continue
+
+            try:
+                next_review = datetime.fromisoformat(progress["next_review"])
+                if next_review <= now:
+                    practice_cards.append({
+                        **card_data,
+                        "progress": progress,
+                        "due_date": progress["next_review"]
+                    })
+            except (KeyError, ValueError):
+                practice_cards.append({
+                    **card_data,
+                    "progress": progress,
+                    "due_date": datetime.min.isoformat()
+                })
+
+        # Sort priority:
+        # 1. New cards (denoted by no progress)
+        # 2. Oldest due dates
+        # 3. Lowest ease factors
+        practice_cards.sort(key=lambda x: (
+            x["due_date"],
+            x["progress"]["ease_factor"] if x["progress"] else 0
+        ))
+
+        result_cards = []
+        for card in practice_cards[:20]:
+            card.pop("due_date", None)
+            result_cards.append(card)
 
         return jsonify({
-            "cards": practice_cards,
-            "message": "Practice cards retrieved successfully"
+            "cards": result_cards,
+            "message": "Spaced repetition cards retrieved"
         }), 200
 
     except Exception as e:
-        return jsonify({"message": f"Failed to get practice cards: {e}"}), 400
+        return jsonify({"message": f"Error: {str(e)}"}), 500
+
+
+@deck_bp.route('/deck/<deck_id>/practice-schedule/<user_id>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def practice_schedule(deck_id, user_id):
+    '''Get the practice schedule for future iterations of cards'''
+    try:
+        deck_cards = db.child("card").order_by_child("deckId").equal_to(deck_id).get()
+        card_ids = [card.key() for card in deck_cards.each()]
+
+        progress_ref = db.child("user_card_progress").child(user_id).get()
+        all_progress = progress_ref.val() or {}
+
+        practice_cards = []
+        now = datetime.now(timezone.utc)  # Use UTC consistently
+
+        for card_id in card_ids:
+            card_data = db.child("card").child(card_id).get().val()
+            progress = all_progress.get(card_id)
+
+            if not progress:
+                practice_cards.append({
+                    **card_data,
+                    "progress": None,
+                    "due_date": datetime.min.isoformat()
+                })
+                continue
+
+            try:
+                next_review = datetime.fromisoformat(progress["next_review"])
+                if next_review <= now:
+                    practice_cards.append({
+                        **card_data,
+                        "progress": progress,
+                        "due_date": progress["next_review"]
+                    })
+            except (KeyError, ValueError):
+                practice_cards.append({
+                    **card_data,
+                    "progress": progress,
+                    "due_date": datetime.min.isoformat()
+                })
+
+        # Sort priority:
+        # 1. New cards (denoted by no progress)
+        # 2. Oldest due dates
+        # 3. Lowest ease factors
+        practice_cards.sort(key=lambda x: (
+            x["due_date"],
+            x["progress"]["ease_factor"] if x["progress"] else 0
+        ))
+
+        result_cards = []
+        for card in practice_cards[:20]:
+            card.pop("due_date", None)
+            result_cards.append(card)
+
+        return jsonify({
+            "cards": result_cards,
+            "message": "Spaced repetition cards retrieved"
+        }), 200
+
+    except Exception as e:
+        return jsonify({"message": f"Error: {str(e)}"}), 500

@@ -77,7 +77,6 @@ export default function Quiz({ cards }: QuizProps) {
     } else {
       incorrectDelta = 1;
       setIncorrectAnswers((prev) => prev + incorrectDelta);
-      recordWrongAnswer(currentCard);
     }
 
     setTimeout(() => {

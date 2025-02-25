@@ -67,12 +67,12 @@ def createcards(deckId):
         data = request.get_json()
         localId = data['localId']
         cards = data['cards']
-        
+
         '''remove existing cards'''
         previous_cards = db.child("card").order_by_child("deckId").equal_to(deckId).get()
         for card in previous_cards.each():
             db.child("card").child(card.key()).remove()
-        
+
         '''add new cards'''
         for card in cards:
             db.child("card").push({
@@ -82,7 +82,7 @@ def createcards(deckId):
                 "back": card['back'],
                 "hint": card['hint']
             })
-        
+
         return jsonify(
             message = 'Adding cards Successful',
             status = 201
