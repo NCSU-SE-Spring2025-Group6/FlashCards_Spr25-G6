@@ -68,7 +68,7 @@ pip install -r requirements.txt
                         ".write": true
                     },
                     "card": {
-                        ".indexOn": ["deckId"],
+                        ".indexOn": ["deckId", "front"],
                         ".read": true,
                         ".write": true
                     },
@@ -100,6 +100,10 @@ pip install -r requirements.txt
                     },
                     "notifications": {
                         ".read": true,
+                        ".write": true
+                    },
+                     "user_card_progress": {
+                          ".read": true,
                         ".write": true
                     }
                 }
