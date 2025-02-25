@@ -74,12 +74,12 @@ pip3 install .
 
 ## Showcase
 
-<p style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; ">
-  <img src="./images/dashboard.png" alt="Demo Screens 1" width="250px" height="250px style="object-fit: cover;" />
-  <img src="./images/deck to folder.png" alt="Demo Screens 2" width="250px" height="250px style="object-fit: cover;" />
-  <img src="./images/decks in folders.png" alt="Demo Screens 3" width="250px" height="250px style="object-fit: cover;" />
-  <img src="./images/practice deck.png" alt="Demo Screens 4" width="250px" height="250px style="object-fit: cover;" />
-  <img src="./images/quiz.png" alt="Demo Screens 5" width="250px" height="250px style="object-fit: cover;" />
-  <img src="./images/quiz complete.png" alt="Demo Screens 6" width="250px" height="250px style="object-fit: cover;" />
-  <img src="./images/leaderboard.png" alt="Demo Screens 7" width="250px" height="250px style="object-fit: cover;" />
+<p style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+  <img src="./images/dashboard.png" alt="Demo Screens 1" width="1200px" style="object-fit: cover;" />
+  <img src="./images/deck to folder.png" alt="Demo Screens 2" width="1200px" style="object-fit: cover;" />
+  <img src="./images/decks in folders.png" alt="Demo Screens 3" width="1200px" style="object-fit: cover;" />
+  <img src="./images/practice deck.png" alt="Demo Screens 4" width="1200px" style="object-fit: cover;" />
+  <img src="./images/quiz.png" alt="Demo Screens 5" width="1200px" style="object-fit: cover;" />
+  <img src="./images/quiz complete.png" alt="Demo Screens 6" width="1200px" style="object-fit: cover;" />
+  <img src="./images/leaderboard.png" alt="Demo Screens 7" width="1200px" style="object-fit: cover;" />
 </p>
