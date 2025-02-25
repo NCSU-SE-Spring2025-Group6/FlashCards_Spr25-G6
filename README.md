@@ -49,7 +49,7 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 5. Quiz Mode
 6. Recently visited Decks
 
-## Watch Flashcards in Action
+## Watch FlashCards in Action
 
 
 https://github.com/user-attachments/assets/7299c38a-891f-42c5-bf64-e595ac8d0bb1
