@@ -1,0 +1,46 @@
+.deck-import-export {
+  display: flex;
+  gap: 8px;
+}
+
+.deck-import-export .btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.deck-import-export .btn i {
+  font-size: 16px;
+}
+
+.deck-card .deck-import-export {
+  display: flex;
+  gap: 4px;
+}
+
+.deck-card .deck-import-export .btn {
+  padding: 2px 8px;
+  font-size: 12px;
+  height: auto;
+  min-height: 24px;
+}
+
+.deck-card .deck-import-export .btn i {
+  font-size: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .deck-import-export {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .deck-import-export .btn {
+    flex: 1;
+    min-width: 120px;
+  }
+} 
