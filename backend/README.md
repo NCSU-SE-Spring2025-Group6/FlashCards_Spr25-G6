@@ -1,5 +1,7 @@
 # Backend Installation Guide
 
+This application uses Firebase as a database, meaning while the application can be ran locally, a connection to the internet is still required for functionality. Heroku can be used if the user wishes to deploy the website online.
+
 1. Make a copy of the `__init__.sample` file and name the new file `__init__.py`
 
 2. Set up [Firebase](https://firebase.google.com/):
@@ -50,7 +52,7 @@
                         ".write": true
                     },
                     "card": {
-                        ".indexOn": ["deckId"],
+                        ".indexOn": ["deckId", "front"],
                         ".read": true,
                         ".write": true
                     },
@@ -82,6 +84,10 @@
                     },
                     "notifications": {
                         ".read": true,
+                        ".write": true
+                    },
+                     "user_card_progress": {
+                          ".read": true,
                         ".write": true
                     }
                 }
