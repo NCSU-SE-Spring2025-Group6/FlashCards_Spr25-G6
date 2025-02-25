@@ -19,7 +19,7 @@
 |Question 4.4| Do you provide a comprehensive guide to all your software’s commands, functions and options?| ✅   |   |          |
 |Question 4.5| Do you provide troubleshooting information that describes the symptoms and step-by-step solutions for problems and error messages?| ✅   |   |          |
 |Question 4.6| If your software can be used as a library, package or service by other software, do you provide comprehensive API documentation?| ✅   |   |          |
-|Question 4.7| Do you store your documentation under revision control with your source code?|    | ❌  |          |
+|Question 4.7| Do you store your documentation under revision control with your source code?|  ✅  |   |          |
 |Question 4.8| Do you publish your release history e.g. release data, version numbers, key features of each release etc. on your web site or in your documentation?| ✅   |   |          |
 | **Q5 - Support**                 | |  |   |   |
 |Question 5.1| Does your software describe how a user can get help with using your software?| ✅   |   |          |
@@ -64,7 +64,7 @@
 |Question 13.1| Does your project have resources (e.g. blog, Twitter, RSS feed, Facebook page, wiki, mailing list) that are regularly updated with information about your software?|    | ❌  |          |
 |Question 13.2| Does your website state how many projects and users are associated with your project?|    | ❌  |          |
 |Question 13.3| Do you provide success stories on your website?|    | ❌  |          |
-|Question 13.4| Do you list your important partners and collaborators on your website?|    | ❌  |          |
+|Question 13.4| Do you list your important partners and collaborators on your website?|  ✅  |    |          |
 |Question 13.5| Do you list your project's publications on your website or link to a resource where these are available?|    | ❌  |          |
 |Question 13.6| Do you list third-party publications that refer to your software on your website or link to a resource where these are available?|    | ❌  |          |
 |Question 13.7| Can users subscribe to notifications to changes to your source code repository?| ✅   |   |          |
@@ -84,7 +84,7 @@
 |Question 15.7| Do you have a recommended citation for your software?|    | ❌  |          |
 | **Q16 - Future Plans**           |  |  |   |   |
 |Question 16.1| Does your website or documentation include a project roadmap (a list of project and development milestones for the next 3, 6 and 12 months)?| ✅   |   |          |
-|Question 16.2| Does your website or documentation describe how your project is funded, and the period over which funding is guaranteed?|    | ❌  |          |
+|Question 16.2| Does your website or documentation describe how your project is funded, and the period over which funding is guaranteed?|  ✅  |    |          |
 |Question 16.3| Do you make timely announcements of the deprecation of components, APIs, etc.?| ✅   |   |          |
 
 

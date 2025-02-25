@@ -87,3 +87,42 @@ pip3 install .
   <img src="./images/quiz complete.png" alt="Demo Screens 6" width="1200px" style="object-fit: cover;" />
   <img src="./images/leaderboard.png" alt="Demo Screens 7" width="1200px" style="object-fit: cover;" />
 </p>
+
+## Contributions to the Project
+
+
+
+Please refer to the [Contributing.md](https://github.com/JohnDamilola/FlashCards/blob/main/Contributing.md) if you want to contrbute to the FlashCards source code. Follow all the guidelines mentioned and raise a pull request for the developers to review before the code goes to the main source code.
+
+
+
+
+
+## Help
+
+Email any queries to the contributors -
+
+## Authors 
+
+1. [Akhil Chawla](achawla@ncsu.edu)
+2. [Sanjana Dalal](sdalal2@ncsu.edu)
+3. [Priya Gandhi](pgandi4@ncsu.edu)
+
+1. [Akhil Chawla](https://github.com/AkhilChawla)
+2. [Sanjana Dalal](https://github.com/sdalal11)
+3. [Priya Gandhi](https://github.com/PriyaGandhi311)
+
+1. [Jeff Powell](https://github.com/jeff-pow)
+2. [Zeiad Yakout](https://github.com/https://github.com/zeiadyakout)
+3. [Jakub Jon](https://github.com/lnotspotl)
+
+
+## License
+
+[MIT](https://tldrlegal.com/license/mit-license)
+
+
+## Funding
+
+
+Our project at the moment is not funded by any organization/individual.
