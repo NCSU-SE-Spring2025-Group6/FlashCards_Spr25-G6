@@ -52,6 +52,10 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 ## Watch Flashcards in Action
 
 
+https://github.com/user-attachments/assets/7299c38a-891f-42c5-bf64-e595ac8d0bb1
+
+
+
 ## Tech Stack
 <a href="https://flask.palletsprojects.com/en/2.2.x/"><img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" /></a>
 <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" /></a>
