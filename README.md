@@ -90,17 +90,16 @@ pip3 install .
 
 ## Contributions to the Project
 
-
-
 Please refer to the [Contributing.md](https://github.com/JohnDamilola/FlashCards/blob/main/Contributing.md) if you want to contrbute to the FlashCards source code. Follow all the guidelines mentioned and raise a pull request for the developers to review before the code goes to the main source code.
 
-
-
-
+## Future Plans
+- Currently, a spaced repetition learning algorithm has been implemented (SM-2), but users are not able to see a schedule for when certain cards should be reviewed. We would like to add a dashboard to allow users to see statistics about when certain cards are up for review, and other statistics such as how confident they are or how often certain cards are correctly answered.
+- We have a few tests that are failing. They are primarily failing because of API endpoints that should return an error status code when given invalid data, but aren't. These would be good "first issues" to onboard new developers, and give them a good bite-sized problem to solve.
+- "Gamify" the system by adding rewards, an XP based progression system, and streaks for consistently completing the aforementioned spaced repetition for consecutive days in a row.
 
 ## Help
 
-Email any queries to the contributors -
+Email any queries to the contributors
 
 ## Authors 
 
@@ -123,6 +122,5 @@ Email any queries to the contributors -
 
 
 ## Funding
-
 
 Our project at the moment is not funded by any organization/individual.
