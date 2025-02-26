@@ -38,14 +38,12 @@ class CardTestApp(unittest.TestCase):
             "localId": "Test",
             "idToken": "some_token",
         }
-
         # Login
         self.client.post(
             "/login",
             data=json.dumps({"email": "aaronadb@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
-
         # Create deck
         self.client.post(
             "/deck/create",
@@ -59,7 +57,6 @@ class CardTestApp(unittest.TestCase):
             ),
             content_type="application/json",
         )
-
         # Test get cards
         response = self.client.get("/deck/Test/card/all")
         self.assertEqual(response.status_code, 200)
@@ -73,14 +70,12 @@ class CardTestApp(unittest.TestCase):
             "localId": "Test",
             "idToken": "some_token",
         }
-
         # Login
         self.client.post(
             "/login",
             data=json.dumps({"email": "aaronadb@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
-
         # Create deck
         self.client.post(
             "/deck/create",
@@ -94,7 +89,6 @@ class CardTestApp(unittest.TestCase):
             ),
             content_type="application/json",
         )
-
         # Test post request to card/all
         response = self.client.post("/deck/Test/card/all")
         self.assertEqual(response.status_code, 405)
@@ -109,17 +103,14 @@ class CardTestApp(unittest.TestCase):
             "localId": "Test",
             "idToken": "some_token",
         }
-
         # Mock database responses
         mock_cards_db.child.return_value.push.return_value = {"name": "test_card_id"}
-
         # Login
         self.client.post(
             "/login",
             data=json.dumps({"email": "aaronadb@gmail.com", "password": "flashcards123"}),
             content_type="application/json",
         )
-
         # Create deck
         self.client.post(
             "/deck/create",
@@ -133,7 +124,6 @@ class CardTestApp(unittest.TestCase):
             ),
             content_type="application/json",
         )
-
         # Create card
         response = self.client.post(
             "/deck/Test/card/create",
@@ -145,7 +135,6 @@ class CardTestApp(unittest.TestCase):
             ),
             content_type="application/json",
         )
-
         self.assertEqual(response.status_code, 201)
 
     @patch("src.auth.routes.auth")
@@ -155,7 +144,6 @@ class CardTestApp(unittest.TestCase):
         """Test the error handling of getcards method"""
         # Mock database to raise an exception
         mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception("Database error")
-
         response = self.client.get("/deck/Test/card/all")
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.data)
@@ -169,7 +157,6 @@ class CardTestApp(unittest.TestCase):
         """Test the error handling of createcards method"""
         # Mock database to raise an exception
         mock_cards_db.child.return_value.push.side_effect = Exception("Database error")
-
         response = self.client.post(
             "/deck/Test/card/create",
             data=json.dumps(
@@ -180,7 +167,6 @@ class CardTestApp(unittest.TestCase):
             ),
             content_type="application/json",
         )
-
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.data)
         self.assertEqual(data["message"], "Adding cards Failed")
@@ -195,7 +181,6 @@ class CardTestApp(unittest.TestCase):
             data=json.dumps({"word": "updated_word", "meaning": "updated_meaning"}),
             content_type="application/json",
         )
-
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.data)
         self.assertEqual(data["message"], "Update Card Successful")
@@ -207,13 +192,11 @@ class CardTestApp(unittest.TestCase):
         """Test error handling in update card functionality"""
         # Mock database to raise an exception
         mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception("Database error")
-
         response = self.client.patch(
             "/deck/test_deck/update/test_card",
             data=json.dumps({"word": "updated_word", "meaning": "updated_meaning"}),
             content_type="application/json",
         )
-
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.data)
         self.assertTrue("Update Card Failed" in data["message"])
@@ -224,11 +207,9 @@ class CardTestApp(unittest.TestCase):
     # def test_delete_card(self, mock_cards_db, mock_deck_db, mock_auth):
     #     '''Test the delete card functionality'''
     #     response = self.client.delete('/deck/test_deck/delete/test_card')
-
     #     self.assertEqual(response.status_code, 200)
     #     data = json.loads(response.data)
     #     self.assertEqual(data['message'], 'Delete Card Successful')
-
     @patch("src.auth.routes.auth")
     @patch("src.deck.routes.db")
     @patch("src.cards.routes.db")
@@ -236,9 +217,7 @@ class CardTestApp(unittest.TestCase):
         """Test error handling in delete card functionality"""
         # Mock database to raise an exception
         mock_cards_db.child.return_value.order_by_child.return_value.equal_to.side_effect = Exception("Database error")
-
         response = self.client.delete("/deck/test_deck/delete/test_card")
-
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.data)
         self.assertEqual(data["message"], "Delete Card Failed")
@@ -248,7 +227,6 @@ class CardTestApp(unittest.TestCase):
         # Test PUT method on card/all route
         response = self.client.put("/deck/Test/card/all")
         self.assertEqual(response.status_code, 405)
-
         # Test DELETE method on card/create route
         response = self.client.delete("/deck/Test/card/create")
         self.assertEqual(response.status_code, 405)

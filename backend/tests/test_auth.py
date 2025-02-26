@@ -124,6 +124,66 @@ class TestAuth(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response_data["message"], "Registered Successfully")
 
+    def test_signup_route_missing_email(self):
+        """Test the signup route with missing email"""
+        response = self.client.post(
+            "/signup", data=json.dumps({"password": "flashcards123"}), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response_data["message"], "Registration Failed")
+
+    def test_signup_route_missing_password(self):
+        """Test the signup route with missing password"""
+        response = self.client.post(
+            "/signup", data=json.dumps({"email": "test@gmail.com"}), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response_data["message"], "Registration Failed")
+
+    def test_signup_route_invalid_json(self):
+        """Test the signup route with invalid JSON"""
+        response = self.client.post("/signup", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response_data["message"], "Registration Failed")
+
+    def test_login_route_missing_email(self):
+        """Test the login route with missing email"""
+        response = self.client.post(
+            "/login", data=json.dumps({"password": "flashcards123"}), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response_data["message"], "Login Failed")
+
+    def test_login_route_missing_password(self):
+        """Test the login route with missing password"""
+        response = self.client.post(
+            "/login", data=json.dumps({"email": "test@gmail.com"}), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response_data["message"], "Login Failed")
+
+    def test_login_route_invalid_json(self):
+        """Test the login route with invalid JSON"""
+        response = self.client.post("/login", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response_data["message"], "Login Failed")
+
+    def test_index_route_with_post(self):
+        """Test the index route with POST method"""
+        response = self.client.post("/")
+        self.assertEqual(response.status_code, 405)
+
+    def test_index_route_with_put(self):
+        """Test the index route with PUT method"""
+        response = self.client.put("/")
+        self.assertEqual(response.status_code, 405)
+
 
 if __name__ == "__main__":
     unittest.main()

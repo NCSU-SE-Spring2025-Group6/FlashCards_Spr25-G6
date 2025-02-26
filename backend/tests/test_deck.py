@@ -74,7 +74,6 @@ class TestDeck(unittest.TestCase):
     #    '''Test the deck/all route of our app'''
     #    response=self.app.get('/deck/all',query_string=dict(localId='Test'))
     #    assert response.status_code==200
-
     def test_deck_all_route_post(self):
         """Test that the post request to the '/deck/all' route is not allowed"""
         response = self.app.post("/deck/all")
@@ -161,7 +160,6 @@ class TestDeck(unittest.TestCase):
             # Arrange: Mock the database update to raise an exception
             with patch("src.deck.routes.db.child") as mock_db:
                 mock_db.return_value.child.return_value.update.side_effect = Exception("Database update failed")
-
                 # Simulate user login and deck creation
                 self.app.post(
                     "/login",
@@ -264,12 +262,10 @@ class TestDeck(unittest.TestCase):
                 ),
                 content_type="application/json",
             )
-
             # Assert: Check the response status code and message
             assert response.status_code == 200
             response_data = json.loads(response.data)
             assert response_data["message"] == "Leaderboard updated successfully"
-
             # Assert that the database update was called with the correct parameters
             mock_leaderboard_ref.update.assert_called_once_with(
                 {
@@ -290,7 +286,6 @@ class TestDeck(unittest.TestCase):
         mock_leaderboard_entry = MagicMock()
         mock_leaderboard_entry.val.return_value = {"correct": 10, "incorrect": 2}
         mock_db.child.return_value.child.return_value.child.return_value.get.return_value = mock_leaderboard_entry
-
         # Act: Send a GET request to fetch the user's score
         response = self.app.get(f"/deck/{deck_id}/user-score/{user_id}")
 
@@ -310,7 +305,6 @@ class TestDeck(unittest.TestCase):
         mock_leaderboard_entry = MagicMock()
         mock_leaderboard_entry.val.return_value = None
         mock_db.child.return_value.child.return_value.child.return_value.get.return_value = mock_leaderboard_entry
-
         # Act: Send a GET request to fetch the user's score
         response = self.app.get(f"/deck/{deck_id}/user-score/{user_id}")
 
@@ -328,7 +322,6 @@ class TestDeck(unittest.TestCase):
 
         # Simulate an exception when accessing the database
         mock_db.child.return_value.child.return_value.child.return_value.get.side_effect = Exception("Database error")
-
         # Act: Send a GET request to fetch the user's score
         response = self.app.get(f"/deck/{deck_id}/user-score/{user_id}")
 
@@ -362,11 +355,9 @@ class TestDeck(unittest.TestCase):
         }
         mock_deck.val.return_value = mock_deck_data
         mock_deck.key.return_value = "deck123"
-
         # Create mock for decks query
         mock_decks_query = MagicMock()
         mock_decks_query.each.return_value = [mock_deck]
-
         # Create mock for cards query
         mock_cards_query = MagicMock()
         mock_cards_query.val.return_value = {"card1": {}, "card2": {}}  # Two cards
@@ -376,7 +367,6 @@ class TestDeck(unittest.TestCase):
             mock_decks_query,  # First call for decks
             mock_cards_query,  # Second call for cards
         ]
-
         # Make the request
         response = self.app.get("/deck/all", query_string=dict(localId="Test"))
 
@@ -387,7 +377,6 @@ class TestDeck(unittest.TestCase):
         assert response_data["decks"][0]["cards_count"] == 2
         assert response_data["decks"][0]["title"] == "TestDeck"
         assert response_data["decks"][0]["id"] == "deck123"
-
         # Verify the mock calls
         mock_db.child.assert_has_calls([call("deck"), call("card")], any_order=True)
 
@@ -467,7 +456,6 @@ class TestDeck(unittest.TestCase):
         mock_db.child.return_value.child.return_value.child.return_value.update.side_effect = Exception(
             "Database error"
         )
-
         response = self.app.post(
             "/deck/TestDeck/update-leaderboard",
             data=json.dumps(
@@ -483,6 +471,190 @@ class TestDeck(unittest.TestCase):
         assert response.status_code == 500
         response_data = json.loads(response.data)
         assert response_data["message"] == "Failed to update leaderboard"
+
+    def test_create_deck_missing_cards(self):
+        """Test creating a deck with missing cards"""
+        response = self.client.post(
+            "/deck/Test/card/create", data=json.dumps({"localId": "Test"}), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Adding cards Failed")
+
+    def test_create_deck_missing_title(self):
+        """Test creating a deck with missing title"""
+        response = self.app.post(
+            "/deck/create",
+            data=json.dumps({"localId": "Test", "description": "This is a test deck", "visibility": "public"}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Create Deck Failed 'title'")
+
+    def test_create_deck_missing_description(self):
+        """Test creating a deck with missing description"""
+        response = self.app.post(
+            "/deck/create",
+            data=json.dumps({"localId": "Test", "title": "TestDeck", "visibility": "public"}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Create Deck Failed 'description'")
+
+    def test_create_deck_missing_visibility(self):
+        """Test creating a deck with missing visibility"""
+        response = self.app.post(
+            "/deck/create",
+            data=json.dumps({"localId": "Test", "title": "TestDeck", "description": "This is a test deck"}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Create Deck Failed 'visibility'")
+
+    def test_create_deck_invalid_json(self):
+        """Test creating a deck with invalid JSON"""
+        response = self.app.post("/deck/create", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Create Deck Failed 400: Bad Request")
+
+    def test_update_deck_missing_title(self):
+        """Test updating a deck with missing title"""
+        response = self.app.patch(
+            "/deck/update/Test",
+            data=json.dumps({"localId": "Test", "description": "Updated description", "visibility": "public"}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Update Deck Failed 'title'")
+
+    def test_update_deck_missing_description(self):
+        """Test updating a deck with missing description"""
+        response = self.app.patch(
+            "/deck/update/Test",
+            data=json.dumps({"localId": "Test", "title": "Updated title", "visibility": "public"}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Update Deck Failed 'description'")
+
+    def test_update_deck_missing_visibility(self):
+        """Test updating a deck with missing visibility"""
+        response = self.app.patch(
+            "/deck/update/Test",
+            data=json.dumps({"localId": "Test", "title": "Updated title", "description": "Updated description"}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Update Deck Failed 'visibility'")
+
+    def test_update_deck_invalid_json(self):
+        """Test updating a deck with invalid JSON"""
+        response = self.app.patch("/deck/update/Test", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Update Deck Failed 400: Bad Request")
+
+    def test_delete_deck_missing_id(self):
+        """Test deleting a deck with missing id"""
+        response = self.app.delete("/deck/delete/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_deck_invalid_json(self):
+        """Test deleting a deck with invalid JSON"""
+        response = self.app.delete("/deck/delete/Test", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Delete Deck Failed")
+
+    def test_get_deck_missing_id(self):
+        """Test fetching a deck with missing id"""
+        response = self.app.get("/deck/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_deck_invalid_json(self):
+        """Test fetching a deck with invalid JSON"""
+        response = self.app.get("/deck/Test", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["decks"], [])
+        self.assertTrue("An error occurred" in data["message"])
+
+    def test_get_decks_invalid_json(self):
+        """Test fetching decks with invalid JSON"""
+        response = self.app.get("/deck/all", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["decks"], [])
+        self.assertTrue("An error occurred" in data["message"])
+
+    def test_update_last_opened_missing_id(self):
+        """Test updating last opened with missing id"""
+        response = self.app.patch("/deck/updateLastOpened/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_update_last_opened_invalid_json(self):
+        """Test updating last opened with invalid JSON"""
+        response = self.app.patch("/deck/updateLastOpened/Test", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertTrue("Failed to update lastOpened" in data["message"])
+
+    def test_get_leaderboard_missing_deckId(self):
+        """Test fetching leaderboard with missing deckId"""
+        response = self.app.get("/deck//leaderboard")
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_leaderboard_invalid_json(self):
+        """Test fetching leaderboard with invalid JSON"""
+        response = self.app.get("/deck/TestDeck/leaderboard", data="invalid json", content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertEqual(data["leaderboard"], [])
+        self.assertTrue("An error occurred" in data["message"])
+
+    def test_update_leaderboard_missing_deckId(self):
+        """Test updating leaderboard with missing deckId"""
+        response = self.app.post(
+            "/deck//update-leaderboard",
+            data=json.dumps({"userId": "test123", "userEmail": "test@example.com", "correct": 10, "incorrect": 2}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_update_leaderboard_invalid_json(self):
+        """Test updating leaderboard with invalid JSON"""
+        response = self.app.post(
+            "/deck/TestDeck/update-leaderboard", data="invalid json", content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 500)
+        data = json.loads(response.data)
+        self.assertEqual(data["message"], "Failed to update leaderboard")
+
+    def test_get_user_score_missing_deckId(self):
+        """Test fetching user score with missing deckId"""
+        response = self.app.get("/deck//user-score/test123")
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_user_score_missing_userId(self):
+        """Test fetching user score with missing userId"""
+        response = self.app.get("/deck/TestDeck/user-score/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_user_score_invalid_json(self):
+        """Test fetching user score with invalid JSON"""
+        response = self.app.get(
+            "/deck/TestDeck/user-score/test123", data="invalid json", content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertTrue("An error occurred" in data["message"])
 
 
 if __name__ == "__main__":
