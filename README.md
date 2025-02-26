@@ -57,7 +57,7 @@ FlashCards is a spaced repetition learning platform to <b>create</b>, <b>memoriz
 ## Watch FlashCards in Action
 
 
-https://github.com/user-attachments/assets/7299c38a-891f-42c5-bf64-e595ac8d0bb1
+https://github-production-user-asset-6210df.s3.amazonaws.com/103015219/416985686-648d1493-5289-4c32-a24a-32a1b7d2ebfc.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250226%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250226T052310Z&X-Amz-Expires=300&X-Amz-Signature=09e0daebf2a91a425b972b63ec41bdc646492700be5e424190ed66a8a43d225f&X-Amz-SignedHeaders=host
 
 
 
