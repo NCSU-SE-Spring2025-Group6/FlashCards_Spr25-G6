@@ -34,6 +34,11 @@
 <a href="https://img.shields.io/badge/ruff-v0.9.7-brightgreen.svg" alt="Ruff version">
 <img src="https://img.shields.io/badge/ruff-v0.9.7-brightgreen.svg"/> </a>
 
+<!-- Zenodo Badge -->
+<a href="https://doi.org/10.5281/zenodo.14928027">
+<img src="https://zenodo.org/badge/DOI/10.5281/zenodo.14928027.svg" alt="DOI"></a>
+
+
 </p>
 
 

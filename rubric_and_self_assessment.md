@@ -32,7 +32,7 @@
 |Question 6.1| Is your software’s architecture and design modular?| ✅   |   |          |
 |Question 6.2| Does your software use an accepted coding standard or convention?| ✅   |   |We use common python libraries and the ruff formatter to uphold coding standards          |
 | **Q7 - Open Standards**          | |  |   |   |
-|Question 7.1| Does your software allow data to be imported and exported using open data formats?|    | ❌  |          |
+|Question 7.1| Does your software allow data to be imported and exported using open data formats?|  ✅  |   | Flashcards can be exported as and imported as JSON plaintext files         |
 |Question 7.2| Does your software allow communications using open communications protocols?| ✅   |   |Using a standard web interface and HTTP          |
 | **Q8 - Portability**             | |  |   |   |
 |Question 8.1| Is your software cross-platform compatible?| ✅   |   |Deploys to a standard website          |
@@ -129,7 +129,7 @@ but nevertheless, here is a track record that everyone is contributing a lot)|ev
 |The file CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up; e.g. see [example](https://github.com/CSC510-Group18/FlashCards/blob/main/CONTRIBUTING.md)|in GH| |
 |The file README.md contains all the following|in GH|3|
 |Video|2min video of new functionality, showing a significant delta from prior.|TODO |
-|DOI badge: exists. To get a Digitial Object Indentifier, regiser the project at [Zenodo](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content). DOI badges look like this: ![Zenodo doi badge](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.1234567-blue.svg) |in GH|TODO|
+|DOI badge: exists. To get a Digitial Object Indentifier, regiser the project at [Zenodo](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content). DOI badges look like this: ![Zenodo doi badge](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.1234567-blue.svg) |in GH|3|
 |Badges showing your style checkers |config files in GH showing your config, badges in README|3|
 |Badges showing your code formatters. |config files in GH showing your this formatter's  config, badges in README|3|
 |Badges showing your syntax checkers. |config files iin  GH showing this checker's config, badges in README  |3|
