@@ -540,3 +540,130 @@ def import_deck():
 
     except Exception as e:
         return jsonify(message=f"Import failed: {e}", status=400), 400
+
+
+@deck_bp.route("/deck/<deck_id>/card-statistics/<user_id>", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def card_statistics(deck_id, user_id):
+    """Get comprehensive statistics about cards in a deck for a specific user"""
+    try:
+        # Get all cards for this deck
+        deck_cards = db.child("card").order_by_child("deckId").equal_to(deck_id).get()
+        if not deck_cards.val():
+            return jsonify({"message": "No cards found for this deck", "statistics": {}}), 200
+
+        # Fetch progress data for all cards
+        progress_ref = db.child("user_card_progress").child(user_id).get()
+        all_progress = progress_ref.val() or {}
+
+        # Initialize statistics containers
+        now = datetime.now(timezone.utc)
+        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        statistics = {
+            "total_cards": 0,
+            "reviewed_cards": 0,
+            "unreviewed_cards": 0,
+            "review_schedule": {"today": 0, "tomorrow": 0, "this_week": 0, "next_week": 0, "later": 0},
+            "confidence_levels": {
+                "low": 0,  # Quality 0-1
+                "medium": 0,  # Quality 2-3
+                "high": 0,  # Quality 4-5
+            },
+            "performance": {"correct_count": 0, "total_reviews": 0, "accuracy_rate": 0},
+            "cards_data": [],
+        }
+
+        # Process each card in the deck
+        for card in deck_cards.each():
+            card_id = card.key()
+            card_data = card.val()
+            statistics["total_cards"] += 1
+
+            # Get card progress
+            progress = all_progress.get(card_id)
+
+            # Card data to return
+            card_info = {
+                "id": card_id,
+                "front": card_data.get("front", ""),
+                "back": card_data.get("back", ""),
+                "next_review": None,
+                "confidence": 0,
+                "correct_count": 0,
+                "reviewed": False,
+            }
+
+            # No progress data means the card hasn't been reviewed yet
+            if not progress:
+                statistics["unreviewed_cards"] += 1
+                statistics["cards_data"].append(card_info)
+                continue
+
+            # Card has been reviewed at least once
+            statistics["reviewed_cards"] += 1
+            card_info["reviewed"] = True
+
+            # Extract confidence level if available
+            confidence = progress.get("confidence", 0)
+            card_info["confidence"] = confidence
+
+            if confidence <= 1:
+                statistics["confidence_levels"]["low"] += 1
+            elif confidence <= 3:
+                statistics["confidence_levels"]["medium"] += 1
+            else:
+                statistics["confidence_levels"]["high"] += 1
+
+            # Get correct answer count
+            correct_count = progress.get("correct", 0)
+            card_info["correct_count"] = correct_count
+            statistics["performance"]["correct_count"] += correct_count
+
+            # Count total reviews based on repetitions if available
+            total_reviews = progress.get("repetitions", 0)
+            if progress.get("last_review"):  # If there was at least one review
+                total_reviews = max(1, total_reviews)
+            statistics["performance"]["total_reviews"] += total_reviews
+
+            # Process next review date
+            try:
+                next_review_str = progress.get("next_review")
+                if next_review_str:
+                    next_review = datetime.fromisoformat(next_review_str)
+                    card_info["next_review"] = next_review_str
+
+                    # Calculate which schedule bucket this falls into
+                    delta_days = (next_review - today).days
+
+                    if delta_days < 0:  # Overdue, count as today
+                        statistics["review_schedule"]["today"] += 1
+                    elif delta_days == 0:  # Due today
+                        statistics["review_schedule"]["today"] += 1
+                    elif delta_days == 1:  # Due tomorrow
+                        statistics["review_schedule"]["tomorrow"] += 1
+                    elif delta_days < 7:  # Due this week
+                        statistics["review_schedule"]["this_week"] += 1
+                    elif delta_days < 14:  # Due next week
+                        statistics["review_schedule"]["next_week"] += 1
+                    else:  # Due later
+                        statistics["review_schedule"]["later"] += 1
+            except (ValueError, TypeError):
+                # If date parsing fails, consider it as not reviewed
+                pass
+
+            # Add card data to the list
+            statistics["cards_data"].append(card_info)
+
+        # Calculate overall accuracy rate
+        if statistics["performance"]["total_reviews"] > 0:
+            statistics["performance"]["accuracy_rate"] = round(
+                (statistics["performance"]["correct_count"] / statistics["performance"]["total_reviews"]) * 100, 2
+            )
+
+        return jsonify(
+            {"statistics": statistics, "message": "Card statistics retrieved successfully", "status": 200}
+        ), 200
+
+    except Exception as e:
+        return jsonify({"message": f"Error retrieving card statistics: {str(e)}", "status": 400}), 400
