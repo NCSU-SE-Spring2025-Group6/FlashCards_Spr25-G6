@@ -1,11 +1,23 @@
 import { useEffect, useState } from "react";
 import "./styles.scss";
-import { Button, Modal } from "antd";
+import { Button, Modal, message } from "antd";
 import http from "utils/api"; // Assuming `http` is the instance for API requests
 import { useParams } from "react-router";
 
 interface QuizProps {
   cards: { front: string; back: string; hint: string }[];
+}
+
+interface GamificationData {
+  streak?: {
+    current_streak: number;
+    longest_streak: number;
+    last_activity_date: string;
+  };
+  achievements_earned?: any[];
+  xp_earned?: number;
+  level_up?: boolean;
+  new_level?: number;
 }
 
 export default function Quiz({ cards }: QuizProps) {
@@ -17,6 +29,7 @@ export default function Quiz({ cards }: QuizProps) {
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
+  const [gamificationData, setGamificationData] = useState<GamificationData | null>(null);
   const { id } = useParams();
   const currentCard = cards[currentCardIndex];
 
@@ -91,6 +104,7 @@ export default function Quiz({ cards }: QuizProps) {
       }
     }, 1000);
   };
+  
   // Update leaderboard function
   const updateLeaderboard = async (finalScore: number, finalIncorrectAnswers: number) => {
     const flashCardUser = window.localStorage.getItem("flashCardUser");
@@ -101,15 +115,64 @@ export default function Quiz({ cards }: QuizProps) {
         // Fetch the user's current score for this deck
         const response = await http.get(`/deck/${id}/user-score/${localId}`);
         const existingScore = response.data?.score["correct"]; // Assuming the score is returned here
+        
         // Only update if the new score is higher than the existing score
         if (finalScore > existingScore || (response.data.score["correct"] === 0 && response.data.score["incorrect"] === 0)) {
-          console.log("inside")
           await http.post(`/deck/${id}/update-leaderboard`, {
             userId: localId,
             userEmail: email,
             correct: finalScore, // Pass the calculated final score
             incorrect: finalIncorrectAnswers, // Pass the calculated final incorrect answers
           });
+        }
+        
+        // Record activity for streak regardless of score
+        try {
+          // First record activity to update streak
+          const activityResponse = await http.post(`/gamification/record-activity/${localId}`, {
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+          });
+          
+          // Then award XP for completing the quiz
+          const xpResponse = await http.post(`/gamification/award-xp/${localId}`, {
+            activity_type: "complete_quiz",
+            metadata: {
+              score: finalScore,
+              total: cards.length,
+              deck_id: id
+            }
+          });
+          
+          // Get gamification data for display
+          const gamificationInfo = {
+            streak: activityResponse.data?.streak,
+            achievements_earned: [
+              ...(activityResponse.data?.achievements_earned || []),
+              ...(xpResponse.data?.achievements_earned || [])
+            ],
+            xp_earned: xpResponse.data?.xp_earned,
+            level_up: xpResponse.data?.level_up,
+            new_level: xpResponse.data?.level
+          };
+          
+          setGamificationData(gamificationInfo);
+          
+          // Show achievement notifications
+          if (gamificationInfo.achievements_earned && gamificationInfo.achievements_earned.length > 0) {
+            gamificationInfo.achievements_earned.forEach(achievement => {
+              if (achievement) {
+                message.success(`Achievement Unlocked: ${achievement.name}! (+${achievement.xp_awarded} XP)`);
+              }
+            });
+          }
+          
+          // Show level up notification
+          if (gamificationInfo.level_up) {
+            message.success(`Level Up! You've reached level ${gamificationInfo.new_level}!`);
+          }
+          
+        } catch (error) {
+          console.error("Error with gamification:", error);
         }
       } catch (error) {
         console.error("Error updating leaderboard:", error);
@@ -122,6 +185,7 @@ export default function Quiz({ cards }: QuizProps) {
     setScore(0);
     setIsQuizFinished(false);
     setIncorrectAnswers(0);
+    setGamificationData(null);
   };
 
   if (isQuizFinished) {
@@ -129,6 +193,37 @@ export default function Quiz({ cards }: QuizProps) {
       <div className="quiz-summary">
         <h2>Quiz Complete!</h2>
         <p>Your Score: {score} / {cards.length}</p>
+        
+        {gamificationData && (
+          <div className="gamification-summary">
+            {gamificationData.xp_earned !== undefined && gamificationData.xp_earned > 0 && (
+              <p className="xp-earned">+{gamificationData.xp_earned} XP</p>
+            )}
+            
+            {gamificationData.streak && (
+              <p className="streak-info">
+                Current Streak: {gamificationData.streak.current_streak} day{gamificationData.streak.current_streak !== 1 ? 's' : ''}
+              </p>
+            )}
+            
+            {gamificationData.achievements_earned && gamificationData.achievements_earned.length > 0 && (
+              <div className="achievements-earned">
+                <h4>Achievements Unlocked:</h4>
+                <ul>
+                  {gamificationData.achievements_earned.map((achievement, index) => 
+                    achievement && (
+                      <li key={index}>
+                        {achievement.name} - {achievement.description} 
+                        <span className="achievement-xp">+{achievement.xp_awarded} XP</span>
+                      </li>
+                    )
+                  )}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+        
         <button className="btn btn-primary" onClick={restartQuiz}>
           Restart Quiz
         </button>

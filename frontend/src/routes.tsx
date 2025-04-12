@@ -7,6 +7,7 @@ import Explore from 'screens/DashboardScreens/Explore'
 import PracticeDeck from 'screens/DashboardScreens/PracticeDeck'
 import EditDeck from 'screens/DashboardScreens/EditDeck'
 import StatisticsDashboard from 'screens/DashboardScreens/StatisticsDashboard'
+import GamificationProfile from 'screens/DashboardScreens/GamificationProfile'
 import Home from 'screens/Home'
 
 const homeRoutes = [
@@ -43,6 +44,10 @@ const dashboardRoutes = [
   {
     path: '/dashboard',
     element: <Dashboard />,
+  },
+  {
+    path: '/profile',
+    element: <GamificationProfile />,
   },
   {
     path: '/create-deck',
