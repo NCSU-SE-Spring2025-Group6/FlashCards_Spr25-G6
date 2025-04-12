@@ -16,7 +16,7 @@
 /backend/__pycache__
 /backend/src/__pycache__
 /backend/src/**/__pycache__
-/backend/src/__init__.py
+backend/src/**/__init__.py
 .DS_Store
 /backend/.flaskenv
 __pycache__/
