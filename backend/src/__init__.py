@@ -1,13 +1,19 @@
+import os
 import pyrebase
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 config = {
-    "apiKey": "AIzaSyDxfVzHaoppp5RM_MwxWJjkZUAA-3iqKhM",
-    "authDomain": "flashcardsv-2.firebaseapp.com",
-    "databaseURL": "https://flashcardsv-2-default-rtdb.firebaseio.com/",
-    "projectId": "flashcardsv-2",
-    "storageBucket": "flashcardsv-2.appspot.com",
-    "messagingSenderId": "202182151892",
-    "appId": "1:202182151892:web:c72d2f4960a321381f7541",
-    "measurementId": "G-GFCSP4EZEZ",
+    "apiKey": os.getenv("FIREBASE_API_KEY"),
+    "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+    "databaseURL": os.getenv("FIREBASE_DATABASE_URL"),
+    "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+    "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+    "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+    "appId": os.getenv("FIREBASE_APP_ID"),
+    "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID"),
 }
+
 firebase = pyrebase.initialize_app(config)
