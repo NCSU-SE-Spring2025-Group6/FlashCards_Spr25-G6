@@ -81,7 +81,16 @@ pip3 install .
 - **Backend** -> [See README.md](backend/README.md)
 - **Frontend** -> [See README.md](frontend/README.md)
 
-## Showcase
+
+## New Showcase
+
+![CleanShot-2025-04-12-15.42.08_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.42.08_base64.png?b)
+![CleanShot-2025-04-12-15.47.49_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.47.49_base64.png?b)
+![CleanShot-2025-04-12-15.47.55_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.47.55_base64.png?b)
+![CleanShot-2025-04-12-15.48.00_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.48.00_base64.png?b)
+
+
+## Old Showcase
 
 <p style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
   <img src="./images/dashboard.png" alt="Demo Screens 1" width="1200px" style="object-fit: cover;" />
