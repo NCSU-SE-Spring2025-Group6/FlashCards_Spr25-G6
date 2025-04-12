@@ -22,76 +22,81 @@ This application uses Firebase as a database, meaning while the application can 
        - Press `Publish`
          - Ruleset:
             ```
-            {
-                "rules": {
-                    "folder_deck": {
-                        ".read": true,
-                        ".write": true,
-                        ".indexOn": ["folderId"]
-                    },
-                    "add-deck": {
-                        ".read": true,
-                        ".write": true
-                    },
-                    "addToFolder": {
-                        ".read": true,
-                        ".write": true
-                    },
-                    "folder": {
-                        ".read": true,
-                        ".write": true,
-                        ".indexOn": ["userId"]
-                    },
-                    "folders": {
-                        ".read": true,
-                        ".write": true
-                    },
-                    "deck": {
-                        ".indexOn": ["id", "userId", "visibility"],
-                        ".read": true,
-                        ".write": true
-                    },
-                    "card": {
-                        ".indexOn": ["deckId", "front"],
-                        ".read": true,
-                        ".write": true
-                    },
-                    "leaderboard": {
-                        ".read": true,  // Adjust if needed
-                        ".write": true, // Adjust if needed
-                        ".indexOn": ["deckId", "correct", "lastAttempt"]  // Suitable for sorting
-                    },
-                    "group": {
-                        ".read": true,
-                        ".write": true
-                    },
-                    "sharing": {
-                        ".read": true,
-                        ".write": true
-                    },
-                    "quizAttempts": {
-                        ".read": true,
-                        ".write": true,
-                        ".indexOn" : ["deckId", "userId", "attemptId"]
-                    },
-                    "streaks": {
-                        ".read": true,
-                        ".write": true
-                    },
-                    "messages": {
-                        ".read": true,
-                        ".write": true
-                    },
-                    "notifications": {
-                        ".read": true,
-                        ".write": true
-                    },
-                     "user_card_progress": {
-                          ".read": true,
-                        ".write": true
-                    }
-                }
-            }
+{
+    "rules": {
+        "folder_deck": {
+            ".read": true,
+            ".write": true,
+            ".indexOn": ["folderId"]
+        },
+        "add-deck": {
+            ".read": true,
+            ".write": true
+        },
+        "addToFolder": {
+            ".read": true,
+            ".write": true
+        },
+        "folder": {
+            ".read": true,
+            ".write": true,
+            ".indexOn": ["userId"]
+        },
+        "folders": {
+            ".read": true,
+            ".write": true
+        },
+        "deck": {
+            ".indexOn": ["id", "userId", "visibility"],
+            ".read": true,
+            ".write": true
+        },
+        "card": {
+            ".indexOn": ["deckId", "front"],
+            ".read": true,
+            ".write": true
+        },
+        "leaderboard": {
+            ".read": true,
+            ".write": true,
+            ".indexOn": ["deckId", "correct", "lastAttempt"]
+        },
+        "group": {
+            ".read": true,
+            ".write": true
+        },
+        "sharing": {
+            ".read": true,
+            ".write": true
+        },
+        "quizAttempts": {
+            ".read": true,
+            ".write": true,
+            ".indexOn": ["deckId", "userId", "attemptId"]
+        },
+        "streaks": {
+            ".read": true,
+            ".write": true
+        },
+        "messages": {
+            ".read": true,
+            ".write": true
+        },
+        "notifications": {
+            ".read": true,
+            ".write": true
+        },
+        "user_card_progress": {
+            ".read": true,
+            ".write": true
+        },
+        "user_gamification": {
+            ".read": true,
+            ".write": true,
+            ".indexOn": ["userId", "xp"]
+        }
+    }
+}
             ```
 
      - From the left-side menu, select `Project Settings`, copy the `apiKey`, `authDomain`, `databaseURL`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`, and `measurementId` values and paste them into a `.env` file at project root, like this:
