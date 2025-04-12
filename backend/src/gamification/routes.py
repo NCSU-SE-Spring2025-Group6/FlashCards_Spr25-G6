@@ -356,20 +356,34 @@ def award_xp(user_id):
 def get_achievements(user_id):
     """Get all achievements for a user"""
     try:
-        # Get user's achievements
-        profile_ref = db.child("user_gamification").child(user_id).get()
-
-        if not profile_ref.val():
+        # Validate user_id
+        if not user_id:
             return jsonify(
                 {
                     "achievements": {},
                     "available_achievements": ACHIEVEMENTS,
-                    "message": "No achievements found",
+                    "message": "Invalid user ID",
                     "status": 200,
                 }
             ), 200
 
-        profile = profile_ref.val()
+        # Ensure user gamification profile exists
+        profile_ref = db.child("user_gamification").child(user_id)
+        profile = profile_ref.get().val()
+
+        # If no profile exists, create a default one
+        if not profile:
+            # Return empty achievements but available ones
+            return jsonify(
+                {
+                    "achievements": {},
+                    "available_achievements": ACHIEVEMENTS,
+                    "message": "No achievements found for this user",
+                    "status": 200,
+                }
+            ), 200
+
+        # Get achievements from profile
         user_achievements = profile.get("achievements", {})
 
         # Return both unlocked achievements and all available achievements
@@ -383,7 +397,16 @@ def get_achievements(user_id):
         ), 200
 
     except Exception as e:
-        return jsonify({"message": f"Error getting achievements: {str(e)}", "status": 400}), 400
+        print(f"Error getting achievements: {str(e)}")
+        # Return available achievements even on error
+        return jsonify(
+            {
+                "achievements": {},
+                "available_achievements": ACHIEVEMENTS,
+                "message": f"Error retrieving achievements: {str(e)}",
+                "status": 200,  # Return 200 instead of 400 to avoid breaking the UI
+            }
+        ), 200
 
 
 @gamification_bp.route("/gamification/leaderboard", methods=["GET"])
