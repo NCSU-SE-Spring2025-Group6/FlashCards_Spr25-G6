@@ -4,6 +4,7 @@ import { Modal, Input, Button } from "antd";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import http from "utils/api";
+import { TrophyOutlined } from "@ant-design/icons";
 
 interface NavbarProps {
   isDashboard?: boolean;
@@ -50,6 +51,12 @@ const Navbar = ({ isDashboard, onFolderCreated }: NavbarProps) => {
               <li className="nav-item">
                 <Link className="nav-link active" aria-current="page" to="/explore">
                   Explore
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link active" aria-current="page" to="/profile">
+                  <TrophyOutlined style={{ marginRight: "5px" }} />
+                  My Achievements
                 </Link>
               </li>
               <Link to="/create-deck">

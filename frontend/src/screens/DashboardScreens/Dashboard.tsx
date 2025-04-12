@@ -1,11 +1,11 @@
-import { Card, Popconfirm, Button, Modal } from "antd";
+import { Card, Popconfirm, Button, Modal, Progress, Tag } from "antd";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import EmptyImg from "assets/images/empty.svg";
 import { PropagateLoader } from "react-spinners";
 import http from "utils/api";
 import Swal from "sweetalert2";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { LeftOutlined, RightOutlined, TrophyOutlined, FireOutlined, StarOutlined } from "@ant-design/icons";
 import Navbar from "../../components/Navbar";
 import DeckImportExport from '../../components/DeckImportExport';
 
@@ -33,8 +33,10 @@ const Dashboard = () => {
   const [fetchingDecks, setFetchingDecks] = useState(false);
   const [isFolderPopupVisible, setIsFolderPopupVisible] = useState(false);
   const [selectedFolderDecks, setSelectedFolderDecks] = useState<Deck[]>([]);
+  const [gamificationProfile, setGamificationProfile] = useState<any>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
 
-// Refs for sliders
+  // Refs for sliders
   const sliderRefLibrary = useRef<HTMLDivElement>(null);
   const sliderRefRecent = useRef<HTMLDivElement>(null);
   const [canScrollLeftLib, setCanScrollLeftLib] = useState(false);
@@ -82,9 +84,26 @@ const Dashboard = () => {
     }
   }, [localId]);
 
+  const fetchGamificationProfile = async () => {
+    if (!localId) return;
+    
+    setLoadingProfile(true);
+    try {
+      const response = await http.get(`/gamification/profile/${localId}`);
+      if (response.data && response.data.profile) {
+        setGamificationProfile(response.data.profile);
+      }
+    } catch (err) {
+      console.error("Error fetching gamification profile:", err);
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
   useEffect(() => {
     fetchDecks();
     fetchFolders();
+    fetchGamificationProfile();
   }, [fetchDecks, fetchFolders]);
 
   useEffect(() => {
@@ -189,6 +208,53 @@ const Dashboard = () => {
                     <h3><b>Hey, Welcome Back!</b> 👋</h3>
                     <p>Let's start creating, memorizing, and sharing your flashcards.</p>
                   </div>
+
+                  {gamificationProfile && (
+                    <div className="gamification-widget" style={{ marginLeft: '20px', display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div className="level-xp" style={{ textAlign: 'center', minWidth: '120px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '5px' }}>
+                          <StarOutlined style={{ color: '#ffc107', marginRight: '5px' }} />
+                          <span style={{ fontWeight: 'bold' }}>Level {gamificationProfile.level}</span>
+                        </div>
+                        <Progress 
+                          percent={Math.round((gamificationProfile.xp_progress / gamificationProfile.xp_needed) * 100)} 
+                          size="small" 
+                          status="active"
+                          showInfo={false}
+                          strokeColor="#1890ff"
+                        />
+                        <div style={{ fontSize: '12px', color: '#666' }}>
+                          {gamificationProfile.xp} XP
+                        </div>
+                      </div>
+
+                      <div className="streak" style={{ textAlign: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '5px' }}>
+                          <FireOutlined style={{ color: '#ff4d4f', marginRight: '5px' }} />
+                          <span style={{ fontWeight: 'bold' }}>Streak</span>
+                        </div>
+                        <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#ff4d4f' }}>
+                          {gamificationProfile.streak?.current_streak || 0}
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666' }}>
+                          days
+                        </div>
+                      </div>
+
+                      <Link to="/profile" style={{ textDecoration: 'none' }}>
+                        <Button type="primary" icon={<TrophyOutlined />}>
+                          View Achievements
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+
+                  {loadingProfile && !gamificationProfile && (
+                    <div className="gamification-widget-loading" style={{ display: 'flex', alignItems: 'center' }}>
+                      <PropagateLoader color="#221daf" size={8} />
+                      <span style={{ marginLeft: '10px', fontSize: '12px' }}>Loading profile...</span>
+                    </div>
+                  )}
                 </div>
               </Card>
             </div>

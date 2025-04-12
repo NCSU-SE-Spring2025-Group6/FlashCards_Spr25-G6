@@ -27,6 +27,7 @@ from flask_cors import cross_origin
 from datetime import datetime, timedelta, timezone
 import json
 import base64
+import requests
 
 try:
     from .. import firebase
@@ -341,9 +342,51 @@ def record_answer(user_id):
             "ease_factor": new_ease,
             "next_review": (datetime.now(timezone.utc) + next_review_delta).isoformat(),
             "last_review": datetime.now(timezone.utc).isoformat(),
+            "confidence": quality,  # Store quality as confidence level
         }
 
         db.child("user_card_progress").child(user_id).child(card_id).update(progress_update)
+
+        # Record activity for streaks
+        try:
+            # First record activity to track streak
+            activity_data = {"timezone": "UTC"}  # Default to UTC if no timezone provided
+
+            # Call gamification API to record activity
+            gamification_response = requests.post(
+                f"{request.host_url}gamification/record-activity/{user_id}",
+                json=activity_data,
+                headers={"Content-Type": "application/json"},
+            )
+
+            # Award XP for reviewing a card
+            xp_data = {"activity_type": "review_card", "metadata": {"quality": quality, "card_id": card_id}}
+
+            # Call gamification API to award XP
+            xp_response = requests.post(
+                f"{request.host_url}gamification/award-xp/{user_id}",
+                json=xp_data,
+                headers={"Content-Type": "application/json"},
+            )
+
+            # Get gamification data from responses
+            streak_data = gamification_response.json() if gamification_response.status_code == 200 else {}
+            xp_data = xp_response.json() if xp_response.status_code == 200 else {}
+
+            # Combine gamification data with response
+            gamification_info = {
+                "streak": streak_data.get("streak", {}),
+                "achievements_earned": (
+                    streak_data.get("achievements_earned", []) + xp_data.get("achievements_earned", [])
+                ),
+                "xp_earned": xp_data.get("xp_earned", 0),
+                "level_up": xp_data.get("level_up", False),
+                "new_level": xp_data.get("level", 0),
+            }
+        except Exception as e:
+            # If gamification fails, log but continue
+            print(f"Gamification error: {str(e)}")
+            gamification_info = {}
 
         return jsonify(
             {
@@ -351,6 +394,7 @@ def record_answer(user_id):
                 "nextReview": progress_update["next_review"],
                 "newInterval": new_interval,
                 "newEase": new_ease,
+                "gamification": gamification_info,
             }
         ), 200
 
