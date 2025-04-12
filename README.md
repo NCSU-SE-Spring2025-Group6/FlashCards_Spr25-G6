@@ -95,7 +95,7 @@ pip3 install .
 
 ## Contributions to the Project
 
-Please refer to the [Contributing.md](https://github.com/JohnDamilola/FlashCards/blob/main/Contributing.md) if you want to contribute to the FlashCards source code. Follow all the guidelines mentioned and raise a pull request for the developers to review before the code goes to the main source code.
+Please refer to the [Contributing.md](/Contributing.md) if you want to contribute to the FlashCards source code. Follow all the guidelines mentioned and raise a pull request for the developers to review before the code goes to the main source code.
 
 ## Future Plans
 - Currently, a spaced repetition learning algorithm has been implemented (SM-2), but users are not able to see a schedule for when certain cards should be reviewed. We would like to add a dashboard to allow users to see statistics about when certain cards are up for review, and other statistics such as how confident they are or how often certain cards are correctly answered.
@@ -120,6 +120,7 @@ Email any queries to the contributors
 2. [Zeiad Yakout](https://github.com/https://github.com/zeiadyakout)
 3. [Jakub Jon](https://github.com/lnotspotl)
 
+1. [Teddy C](xchen87@ncsu.edu)
 
 ## License
 
