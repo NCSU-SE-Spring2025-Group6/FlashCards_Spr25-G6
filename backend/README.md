@@ -94,7 +94,18 @@ This application uses Firebase as a database, meaning while the application can 
             }
             ```
 
-     - From the left-side menu, select `Project Settings`, copy the `apiKey`, `authDomain`, `databaseURL`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`, and `measurementId` values and paste them into the corresponding fields in `__init__.py`
+     - From the left-side menu, select `Project Settings`, copy the `apiKey`, `authDomain`, `databaseURL`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`, and `measurementId` values and paste them into a `.env` file at project root, like this:
+  
+    ```
+    FIREBASE_API_KEY=AIzaSyDxfVzHaoppp5RM_MwxWJjkZUAA-3iqKhM
+    FIREBASE_AUTH_DOMAIN=flashwcardsv-2.firebaseapp.com
+    FIREBASE_DATABASE_URL=https://flashcardsv-2-default-rtdb.firebaseio.com/
+    FIREBASE_PROJECT_ID=flashcardsv-1
+    FIREBASE_STORAGE_BUCKET=flashcardsv-2.appspot.com
+    FIREBASE_MESSAGING_SENDER_ID=202982151892
+    FIREBASE_APP_ID=1:202182151892:web:c72d2f4960a321381f7541
+    FIREBASE_MEASUREMENT_ID=G-GFCSP4EZEZ
+    ```
      - Enable email/password sign-in
        - Return to the Firebase console
        - Click on `Authentication` in the left-side bar
