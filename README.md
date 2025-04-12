@@ -71,6 +71,7 @@ https://github-production-user-asset-6210df.s3.amazonaws.com/103015219/416985686
 <a href="https://www.heroku.com/"><img src="https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white" /></a>
 
 ## Installation
+Install Conda or Miniconda, npm if it is not already installed in your system. 
 ```bash
 conda create -n flashcards python=3.12.2
 conda activate flashcards
