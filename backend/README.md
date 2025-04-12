@@ -107,6 +107,12 @@ This application uses Firebase as a database, meaning while the application can 
      - ```bash
        python api.py
        ```
+    
+    To serve the backend in production mode with high-performance WSGI server gunicorn, run:
+    - ```bash
+      # in project root
+      make serve-backend
+      ```
 
 ## Heroku Deployment Steps (optional)
 1. ```heroku login```
