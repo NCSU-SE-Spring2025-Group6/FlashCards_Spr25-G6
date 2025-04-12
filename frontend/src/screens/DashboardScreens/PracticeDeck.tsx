@@ -135,7 +135,9 @@ const PracticeDeck = () => {
         front: currentCard.front,
         back: currentCard.back,
         hint: currentCard.hint,
-        quality: quality
+        quality: quality,
+        confidence: quality, // Store quality directly as confidence
+        correct: quality >= 3 ? 1 : 0 // Mark as correct if quality >= 3
       });
 
       message.success("Progress updated!");
@@ -354,6 +356,11 @@ const PracticeDeck = () => {
                         ? "Leave Practice Mode"
                         : "Practice with Spaced Repetition"}
                     </button>
+                    <Link to={`/deck/${id}/statistics`}>
+                      <button className="btn btn-white">
+                        View Statistics
+                      </button>
+                    </Link>
                     <button
                       className="btn btn-white"
                       onClick={showLeaderboard}

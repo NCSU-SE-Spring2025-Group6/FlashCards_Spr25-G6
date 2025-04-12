@@ -276,6 +276,7 @@ const Dashboard = () => {
                       <div className="menu">
                         <Link to={`/deck/${id}/practice`}><button className="btn text-left"><i className="lni lni-book"></i> Practice</button></Link>
                         <Link to={`/deck/${id}/update`}><button className="btn text-edit"><i className="lni lni-pencil-alt"></i> Update</button></Link>
+                        <Link to={`/deck/${id}/statistics`}><button className="btn text-info"><i className="lni lni-stats-up"></i> Statistics</button></Link>
                           <Popconfirm
                             title="Are you sure to delete this deck?"
                             onConfirm={() => handleDeleteDeck(id)}
