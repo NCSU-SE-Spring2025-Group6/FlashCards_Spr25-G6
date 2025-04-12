@@ -84,6 +84,8 @@ pip3 install .
 
 ## New Showcase
 
+Screenshots can also be viewed in this gallery: https://gg.teddysc.me/?g=c8cf2567f52c2540d0ee450fa4642976&a
+
 ![CleanShot-2025-04-12-15.42.08_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.42.08_base64.png?b)
 ![CleanShot-2025-04-12-15.47.49_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.47.49_base64.png?b)
 ![CleanShot-2025-04-12-15.47.55_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.47.55_base64.png?b)
