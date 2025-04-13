@@ -76,7 +76,7 @@ def signup():
         return jsonify(message=message, firebase_error=error_code, status=400), 400
     except Exception as _:
         """if the registration process is not successful, this message is displayed"""
-        return jsonify(message="An unknown error occurred. Please try again.", status=400), 400
+        return jsonify(message="Registration failed. Please try again.", status=400), 400
 
 
 @auth_bp.route("/login", methods=["POST"])
