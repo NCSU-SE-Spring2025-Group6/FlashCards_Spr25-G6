@@ -21,8 +21,10 @@
 <a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
 <img src="https://codecov.io/github/WolfByteCollective/FlashCards/branch/main/graph/badge.svg"/> </a>
 
+<!--  -->
+
 <!-- Python Version Badge -->
-<a href="https://img.shields.io/badge/python-v3.12.2-yellow.svg" alt="Python version">
+<a href="https://www.python.org/downloads/release/python-3122/" alt="Python version">
 <img src="https://img.shields.io/badge/python-v3.12.2-yellow.svg"/> </a>
 
 <!-- Release Badge -->
