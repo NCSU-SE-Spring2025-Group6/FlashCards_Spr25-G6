@@ -57,10 +57,11 @@ const Register = () => {
       })
       .catch((err) => {
         console.log(err)
+        const message = err?.response?.data?.message || "A server error occurred, please try again.";
         Swal.fire({
           icon: 'error',
           title: 'Registration Failed!',
-          text: 'An error occurred, please try again',
+          text: message,
           confirmButtonColor: '#221daf',
         })
         setIsSubmitting(false);

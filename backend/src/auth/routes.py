@@ -26,6 +26,8 @@ from flask import Blueprint, jsonify
 from flask import current_app as app
 from flask_cors import cross_origin
 from flask import request
+import requests
+import json
 
 try:
     from .. import firebase
@@ -59,9 +61,22 @@ def signup():
         user = auth.create_user_with_email_and_password(email, password)
         """if the registration process is successful, this message is displayed"""
         return jsonify(user=user, message="Registered Successfully", status=201), 201
+    except requests.exceptions.HTTPError as e:
+        error_body = json.loads(e.args[1])
+        error_code = error_body.get('error', {}).get('message', 'UNKNOWN_ERROR')
+
+        error_messages = {
+            "EMAIL_EXISTS": "That email address is already registered to an account.",
+            "INVALID_EMAIL": "Check that your email address is correctly formatted.",
+            "WEAK_PASSWORD : Password should be at least 6 characters": "Your password must be at least 6 characters long.",
+        }
+
+        message = error_messages.get(error_code, "Registration failed. Please try again.")
+
+        return jsonify(message=message, firebase_error=error_code, status=400), 400
     except Exception as _:
         """if the registration process is not successful, this message is displayed"""
-        return jsonify(message="Registration Failed", status=400), 400
+        return jsonify(message="An unknown error occurred. Please try again.", status=400), 400
 
 
 @auth_bp.route("/login", methods=["POST"])
