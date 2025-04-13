@@ -1,4 +1,3 @@
-
 <!-- Logo image -->
 <p align="center">
   <img
@@ -81,6 +80,31 @@ pip3 install .
 - **Backend** -> [See README.md](backend/README.md)
 - **Frontend** -> [See README.md](frontend/README.md)
 
+## Gamification System
+
+Our new gamification system helps users stay motivated and track their learning progress:
+
+### How to Earn XP Points:
+- **Reviewing Cards**: 5-15 XP per card based on recall quality
+- **Daily Streaks**: Maintain a streak for XP bonuses (up to 50% extra)
+- **Completing Quizzes**: 20-50 XP depending on your score
+- **Unlocking Achievements**: Special achievements award 30-500 XP
+
+### Features:
+- **Level System**: Progress through levels as you earn XP
+- **Achievement Badges**: Unlock achievements for study milestones
+- **Streaks**: Track daily activity with streak counters
+- **Leaderboard**: Compete with other users based on XP
+
+### Firebase Database Setup for Gamification:
+To enable the gamification system, add these rules to your Firebase Realtime Database:
+```json
+"user_gamification": {
+    ".read": true,
+    ".write": true,
+    ".indexOn": ["userId", "xp"]
+}
+```
 
 ## New Showcase
 
@@ -91,6 +115,16 @@ Screenshots can also be viewed in this gallery: https://gg.teddysc.me/?g=c8cf256
 ![CleanShot-2025-04-12-15.47.55_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.47.55_base64.png?b)
 ![CleanShot-2025-04-12-15.48.00_base64.png](https://g.teddysc.me/tddschn/c8cf2567f52c2540d0ee450fa4642976/CleanShot-2025-04-12-15.48.00_base64.png?b)
 
+### Gamification Feature Screenshots
+
+![Dashboard with Gamification](https://i.imgur.com/kBnKL3r.png)
+*Dashboard showing Level, XP progress, and Streak counter*
+
+![Achievements Page](https://i.imgur.com/PZ8J4EV.png)
+*Gamification Profile with achievements and leaderboard*
+
+![Quiz XP Rewards](https://i.imgur.com/NTcwmFn.png)
+*Earning XP after completing a quiz*
 
 ## Old Showcase
 
