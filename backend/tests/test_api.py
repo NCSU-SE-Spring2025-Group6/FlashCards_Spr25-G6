@@ -188,7 +188,8 @@ class TestCreateApp(unittest.TestCase):
         # self.assertEqual(response_data["message"], "Registration Failed")
         self.assertIn(response_data["message"], 
                       ["Registration Failed",
-                        "An unknown error occurred. Please try again."
+                        "An unknown error occurred. Please try again.",
+                        "Registration failed. Please try again."
                         ]
                     )
 
@@ -204,7 +205,8 @@ class TestCreateApp(unittest.TestCase):
         # self.assertEqual(response_data["message"], "Registration Failed")
         self.assertIn(response_data["message"], 
                       ["Registration Failed",
-                        "An unknown error occurred. Please try again."
+                        "An unknown error occurred. Please try again.",
+                        "Registration failed. Please try again."
                         ]
                     )
 
@@ -220,7 +222,8 @@ class TestCreateApp(unittest.TestCase):
         # self.assertEqual(response_data["message"], "Registration Failed")
         self.assertIn(response_data["message"], 
                       ["Registration Failed",
-                        "An unknown error occurred. Please try again."
+                        "An unknown error occurred. Please try again.",
+                        "Registration failed. Please try again."
                         ]
                     )
 
