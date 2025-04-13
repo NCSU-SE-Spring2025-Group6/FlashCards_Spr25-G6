@@ -109,10 +109,6 @@ Email any queries to the contributors
 
 ## Authors 
 
-1. [Akhil Chawla](achawla@ncsu.edu)
-2. [Sanjana Dalal](sdalal2@ncsu.edu)
-3. [Priya Gandhi](pgandi4@ncsu.edu)
-
 1. [Akhil Chawla](https://github.com/AkhilChawla)
 2. [Sanjana Dalal](https://github.com/sdalal11)
 3. [Priya Gandhi](https://github.com/PriyaGandhi311)
