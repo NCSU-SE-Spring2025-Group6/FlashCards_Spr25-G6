@@ -1,0 +1,92 @@
+@import "./../node_modules/antd/dist/antd.css";
+@import "assets/fonts/nuckle/stylesheet.css";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+input.form-control {
+  height: 56px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+label {
+  font-size: 16px;
+}
+
+.btn-main {
+  background: #000;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 10px 20px;
+  height: 48px;
+  font-size: 16px;
+  color: #fff;
+  &:hover {
+    background: #fff;
+    color: #000;
+  }
+}
+
+.btn {
+  height: 48px;
+  border-radius: 8px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.mr-2 {
+  margin-right: 8px;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.ant-btn-primary {
+  background: #221daf !important;
+  border-color: #221daf !important;
+}
+
+.ant-btn-default {
+  border-color: #221daf !important;
+  &:hover {
+    border-color: #221daf !important;
+    color: #221daf !important;
+  }
+}
+
+.text-danger {
+  color: crimson;
+}
+
+.text-edit {
+  color: #221daf;
+}
+
+.btn-white {
+  background: #fff;
+  font-weight: 600;
+  padding: 10px 20px;
+  height: 48px;
+  font-size: 16px;
+}
