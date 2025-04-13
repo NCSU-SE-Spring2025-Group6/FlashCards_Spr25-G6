@@ -97,7 +97,7 @@ const Register = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Password</label>
+                    <label>Password (must be 6+ characters)</label>
                     <input
                       type="password"
                       placeholder="password"
