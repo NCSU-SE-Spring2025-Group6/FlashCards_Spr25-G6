@@ -10,11 +10,11 @@
 <p align="center">
 
 <!-- Licence Badge -->
-<a href="https://github.com/CSC510-Group18/FlashCards/blob/main/LICENSE">
-<img src="https://img.shields.io/github/license/CSC510-Group18/flashcards?style=plastic"></a>
+<a href="https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/LICENSE">
+<img src="https://img.shields.io/github/license/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6?style=plastic"></a>
 
 <!-- Workflow Badge -->
-<a href="https://github.com/CSC510-Group18/FlashCards/blob/main/.github/workflows/backend_tests.yml" alt="Python Backend Tests">
+<a href="https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/.github/workflows/backend_tests.yml" alt="Python Backend Tests">
 <img src="https://github.com/CSC510-Group18/FlashCards/actions/workflows/backend_tests.yml/badge.svg?branch=main"/> </a>
 
 <!-- Codecov Badge -->
