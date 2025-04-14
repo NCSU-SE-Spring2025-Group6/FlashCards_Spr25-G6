@@ -45,12 +45,7 @@
 <li><a class="reference internal" href="#">Welcome to FlashCards Backend’s documentation!</a></li>
 <li><a class="reference internal" href="#api-documentation">API Documentation</a><ul>
 <li><a class="reference internal" href="#api-module">API Module</a></li>
-<li><a class="reference internal" href="#module-src.auth.routes">Authentication Module</a><ul>
-<li><a class="reference internal" href="#src.auth.routes.index"><code class="docutils literal notranslate"><span class="pre">index()</span></code></a></li>
-<li><a class="reference internal" href="#src.auth.routes.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
-<li><a class="reference internal" href="#src.auth.routes.signup"><code class="docutils literal notranslate"><span class="pre">signup()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#authentication-module">Authentication Module</a></li>
 <li><a class="reference internal" href="#cards-module">Cards Module</a></li>
 <li><a class="reference internal" href="#deck-module">Deck Module</a></li>
 <li><a class="reference internal" href="#folders-module">Folders Module</a></li>
@@ -93,30 +88,8 @@
 <section id="api-module">
 <h2>API Module<a class="headerlink" href="#api-module" title="Link to this heading"></a></h2>
 </section>
-<section id="module-src.auth.routes">
-<span id="authentication-module"></span><h2>Authentication Module<a class="headerlink" href="#module-src.auth.routes" title="Link to this heading"></a></h2>
-<p>import dependancies</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="src.auth.routes.index">
-<span class="sig-prename descclassname"><span class="pre">src.auth.routes.</span></span><span class="sig-name descname"><span class="pre">index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/auth/routes.html#index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.auth.routes.index" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.auth.routes.login">
-<span class="sig-prename descclassname"><span class="pre">src.auth.routes.</span></span><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/auth/routes.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.auth.routes.login" title="Link to this definition"></a></dt>
-<dd><p>this method is used by registered users to sign in to their account</p>
-<p>POST /login [email, password]
-payload: { email: “string”, password: “string” }</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.auth.routes.signup">
-<span class="sig-prename descclassname"><span class="pre">src.auth.routes.</span></span><span class="sig-name descname"><span class="pre">signup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/auth/routes.html#signup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.auth.routes.signup" title="Link to this definition"></a></dt>
-<dd><p>this method is used to create new users and register them in firebase</p>
-<p>POST /signup [email, password]
-payload: { email: “string”, password: “string” }</p>
-</dd></dl>
-
+<section id="authentication-module">
+<h2>Authentication Module<a class="headerlink" href="#authentication-module" title="Link to this heading"></a></h2>
 </section>
 <section id="cards-module">
 <h2>Cards Module<a class="headerlink" href="#cards-module" title="Link to this heading"></a></h2>
