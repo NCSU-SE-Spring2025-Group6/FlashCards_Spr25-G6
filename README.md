@@ -19,8 +19,8 @@
 
 
 <!-- Codecov Badge -->
-<a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
-<img src="https://codecov.io/github/WolfByteCollective/FlashCards/branch/main/graph/badge.svg"/> </a>
+<a href="https://codecov.io/gh/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6" >
+<img src="https://codecov.io/gh/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/graph/badge.svg?token=UsrbSfY7W0"/> </a>
 
 <!-- add more badges  -->
 
