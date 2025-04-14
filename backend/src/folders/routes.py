@@ -22,19 +22,18 @@
 
 """routes.py is a file in the folder folder that has all the functions defined that manipulate folders. All CRUD functions are defined here."""
 
-from flask import Blueprint, jsonify, request  # type: ignore
+from flask import jsonify, request  # type: ignore
 from flask_cors import cross_origin  # type: ignore
 # from __init__ import firebase
+
+from src.blueprints import folder_bp
 
 try:
     from .. import firebase
 except ImportError:
     from __init__ import firebase
 
-folder_bp = Blueprint("folder_bp", __name__)
-
 db = firebase.database()
-
 
 @folder_bp.route("/folder/<id>", methods=["GET"])
 @cross_origin(supports_credentials=True)

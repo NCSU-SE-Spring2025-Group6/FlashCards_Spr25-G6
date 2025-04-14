@@ -2,9 +2,10 @@ import json
 import unittest
 from unittest.mock import patch, MagicMock
 from flask import Flask
-from src.folders.routes import (
-    folder_bp,
-)  # Adjust the import based on your app structure
+# from src.folders.routes import (
+#     folder_bp,
+# )  # Adjust the import based on your app structure
+from src.blueprints import folder_bp
 import sys
 from pathlib import Path
 

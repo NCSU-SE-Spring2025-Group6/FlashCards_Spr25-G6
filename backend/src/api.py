@@ -30,18 +30,12 @@ def create_app():
 
     with app.app_context():
         try:
-            from .auth.routes import auth_bp
-            from .deck.routes import deck_bp
-            from .cards.routes import card_bp
-            from .folders.routes import folder_bp
+            from .blueprints import auth_bp, card_bp, deck_bp, folder_bp
             from .user.routes import user_bp
             from .leaderboard.routes import leaderboard_bp
             from .gamification.routes import gamification_bp
         except ImportError:
-            from auth.routes import auth_bp
-            from deck.routes import deck_bp
-            from cards.routes import card_bp
-            from folders.routes import folder_bp
+            from blueprints import auth_bp, card_bp, deck_bp, folder_bp
             from user.routes import user_bp
             from leaderboard.routes import leaderboard_bp
             from gamification.routes import gamification_bp
