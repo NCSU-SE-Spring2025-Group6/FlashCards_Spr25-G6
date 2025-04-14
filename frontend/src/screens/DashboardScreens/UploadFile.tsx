@@ -7,6 +7,7 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import http from "utils/api";
+import { Radio } from "antd"; // Import Radio from Ant Design
 import "./styles.scss";
 
 /**
@@ -22,12 +23,18 @@ import "./styles.scss";
  * - Sends the text content to the backend via an HTTP POST request.
  * - Provides success and error feedback to the user using Swal alerts.
  * - Redirects the user to the dashboard upon successful processing.
+ * - Allows users to set the visibility of the deck (Public or Private).
+ * - Allows users to optionally add a title and description for the deck.
  *
  * @component
  */
 const UploadFile = () => {
   const [fileContent, setFileContent] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null); // State for file name
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [visibility, setVisibility] = useState<string>("public"); // State for visibility
+  const [title, setTitle] = useState<string>(""); // State for optional title
+  const [description, setDescription] = useState<string>(""); // State for optional description
 
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
@@ -46,6 +53,10 @@ const UploadFile = () => {
         });
         return;
       }
+
+      // Extract file name (excluding extension)
+      const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
+      setFileName(nameWithoutExtension);
 
       // Read the file content
       const reader = new FileReader();
@@ -81,9 +92,16 @@ const UploadFile = () => {
 
     setIsSubmitting(true);
 
+    // Use the provided title or fallback to the file name
+    const deckTitle = title || fileName;
+    const deckDescription = description || fileName;
+
     const payload = {
       text: fileContent,
       localId,
+      title: deckTitle, // Include title in the payload
+      visibility, // Include visibility in the payload
+      description: deckDescription, // Include description if provided
     };
 
     await http
@@ -144,6 +162,43 @@ const UploadFile = () => {
                         required
                       />
                     </div>
+
+                    {/* Optional Title Field */}
+                    <div className="form-group mt-4">
+                      <label>Deck Title (Optional)</label>
+                      <textarea
+                        className="form-control"
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="Title"
+                      />
+                    </div>
+
+                    {/* Optional Description Field */}
+                    <div className="form-group mt-4">
+                      <label>Deck Description (Optional)</label>
+                      <textarea
+                        className="form-control"
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Description"
+                      />
+                    </div>
+
+                    {/* Visibility Selection */}
+                    <div className="visibility mt-4">
+                      <Radio.Group
+                        className="d-flex justify-content-between"
+                        value={visibility}
+                        onChange={(e) => setVisibility(e.target.value)}
+                      >
+                        <Radio value={"public"}>
+                          Public <i className="lni lni-world"></i>
+                        </Radio>
+                        <Radio value={"private"}>
+                          Private <i className="lni lni-lock-alt"></i>
+                        </Radio>
+                      </Radio.Group>
+                    </div>
+
                     <div className="form-group mt-4 text-right mb-0">
                       <button className="btn" type="submit" disabled={isSubmitting}>
                         <i className="lni lni-upload mr-2"></i>
