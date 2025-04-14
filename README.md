@@ -15,7 +15,8 @@
 
 <!-- Workflow Badge -->
 <a href="https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/.github/workflows/backend_tests.yml" alt="Python Backend Tests">
-<img src="https://github.com/CSC510-Group18/FlashCards/actions/workflows/backend_tests.yml/badge.svg?branch=main"/> </a>
+<img src="https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/actions/workflows/backend_tests.yml/badge.svg?branch=main"/> </a>
+
 
 <!-- Codecov Badge -->
 <a href="https://app.codecov.io/gh/WolfByteCollective/FlashCards" alt="Codecov">
