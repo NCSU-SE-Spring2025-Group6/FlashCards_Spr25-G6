@@ -75,7 +75,7 @@ jobs:
 
       # Archive code coverage results
       - name: Archive backend coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
           path: |
@@ -83,7 +83,7 @@ jobs:
             backend/htmlcov
 
       # - name: Archive frontend coverage results
-      #   uses: actions/upload-artifact@v3
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: frontend-code-coverage-report
       #     path: frontend/coverage
