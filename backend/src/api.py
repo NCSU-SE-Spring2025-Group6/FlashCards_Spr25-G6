@@ -38,6 +38,7 @@ def create_app():
             from .user.routes import user_bp
             from .leaderboard.routes import leaderboard_bp
             from .gamification.routes import gamification_bp
+            from .upload.routes import upload_bp
         except ImportError:
             from auth.routes import auth_bp
             from deck.routes import deck_bp
@@ -46,6 +47,7 @@ def create_app():
             from user.routes import user_bp
             from leaderboard.routes import leaderboard_bp
             from gamification.routes import gamification_bp
+            from upload.routes import upload_bp
 
         # Register Blueprints
         app.register_blueprint(auth_bp)
@@ -55,6 +57,7 @@ def create_app():
         app.register_blueprint(user_bp)
         app.register_blueprint(leaderboard_bp)
         app.register_blueprint(gamification_bp)
+        app.register_blueprint(upload_bp)
 
     return app
 

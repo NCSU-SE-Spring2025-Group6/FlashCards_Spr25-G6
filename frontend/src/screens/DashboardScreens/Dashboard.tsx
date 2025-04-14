@@ -297,6 +297,9 @@ const Dashboard = () => {
                   <Link to="/create-deck" className="btn btn-mains">
                     <i className="lni lni-plus"></i> Create New Deck
                   </Link>
+                  <Link to="/upload" className="btn btn-secondary">
+                    <i className="lni lni-upload"></i> Create Deck from File
+                  </Link>
                 </div>
               </div>
             </div>

@@ -9,6 +9,7 @@ import EditDeck from 'screens/DashboardScreens/EditDeck'
 import StatisticsDashboard from 'screens/DashboardScreens/StatisticsDashboard'
 import GamificationProfile from 'screens/DashboardScreens/GamificationProfile'
 import Home from 'screens/Home'
+import UploadFile from "screens/DashboardScreens/UploadFile"
 
 const homeRoutes = [
   {
@@ -41,6 +42,10 @@ const authRoutes = [
 ]
 
 const dashboardRoutes = [
+  {
+    path: '/upload',
+    element: <UploadFile />,
+  },
   {
     path: '/dashboard',
     element: <Dashboard />,
