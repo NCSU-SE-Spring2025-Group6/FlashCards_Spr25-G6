@@ -12,6 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      FIREBASE_API_KEY: dummy
+      FIREBASE_AUTH_DOMAIN: dummy.firebaseapp.com
+      FIREBASE_DATABASE_URL: https://dummy.firebaseio.com
+      FIREBASE_STORAGE_BUCKET: dummy.appspot.com
+      
     steps:
       - uses: actions/checkout@v4
 
