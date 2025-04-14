@@ -1,7 +1,7 @@
 /**
  * Author: Md Jakaria
  * Date: 2025-04-13
- * Description: This component allows users to upload a file to create a new deck.
+ * Description: This component allows users to upload a file, read its content, and send the text to the backend.
  */
 
 import { useState } from "react";
@@ -12,66 +12,87 @@ import "./styles.scss";
 /**
  * UploadFile Component
  *
- * This component provides a user interface for uploading a file to create a new deck.
- * Users can select a `.txt` file from their local system, which will then be uploaded
- * to the server for processing. Upon successful upload, the server processes the file
- * and creates a new deck based on the file's content.
+ * This component provides a user interface for uploading a `.txt` file, reading its content,
+ * and sending the text to the backend for processing. The backend processes the text and
+ * creates a new deck based on the file's content.
  *
  * Features:
  * - File selection with validation for `.txt` files.
- * - Displays a loading state while the file is being uploaded.
+ * - Reads the file content on the client side.
+ * - Sends the text content to the backend via an HTTP POST request.
  * - Provides success and error feedback to the user using Swal alerts.
- * - Redirects the user to the dashboard upon successful file upload and deck creation.
- *
- * How it works:
- * 1. The user selects a `.txt` file using the file input field.
- * 2. The selected file is stored in the component's state.
- * 3. Upon form submission, the file is sent to the server via an HTTP POST request.
- * 4. The server processes the file and creates a new deck.
- * 5. If the upload is successful, the user is notified and redirected to the dashboard.
- * 6. If the upload fails, an error message is displayed to the user.
+ * - Redirects the user to the dashboard upon successful processing.
  *
  * @component
  */
 const UploadFile = () => {
-  const [file, setFile] = useState<File | null>(null);
+  const [fileContent, setFileContent] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const flashCardUser = window.localStorage.getItem("flashCardUser");
   const { localId } = (flashCardUser && JSON.parse(flashCardUser)) || {};
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+
+      // Validate file type
+      if (file.type !== "text/plain") {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid File Type!",
+          text: "Please upload a valid .txt file.",
+          confirmButtonColor: "#221daf",
+        });
+        return;
+      }
+
+      // Read the file content
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setFileContent(reader.result.toString());
+        }
+      };
+      reader.onerror = () => {
+        Swal.fire({
+          icon: "error",
+          title: "File Read Error!",
+          text: "An error occurred while reading the file. Please try again.",
+          confirmButtonColor: "#221daf",
+        });
+      };
+      reader.readAsText(file);
     }
   };
 
   const handleUploadFile = async (e: any) => {
     e.preventDefault();
 
-    if (!file) {
+    if (!fileContent) {
       Swal.fire({
         icon: "error",
-        title: "No File Selected!",
-        text: "Please select a file to upload.",
+        title: "No File Content!",
+        text: "Please select a file and ensure it has valid content.",
         confirmButtonColor: "#221daf",
       });
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("localId", localId);
-
     setIsSubmitting(true);
 
+    const payload = {
+      text: fileContent,
+      localId,
+    };
+
     await http
-      .post("/api/upload", formData)
+      .post("/api/upload", payload)
       .then((res) => {
         Swal.fire({
           icon: "success",
-          title: "File Uploaded Successfully!",
-          text: "Your file has been processed, and a new deck has been created.",
+          title: "Text Uploaded Successfully!",
+          text: "Your text has been processed, and a new deck has been created.",
           confirmButtonColor: "#221daf",
         }).then(() => {
           setIsSubmitting(false);
@@ -81,8 +102,8 @@ const UploadFile = () => {
       .catch((err) => {
         Swal.fire({
           icon: "error",
-          title: "File Upload Failed!",
-          text: "An error occurred while processing your file. Please try again.",
+          title: "Upload Failed!",
+          text: "An error occurred while processing your text. Please try again.",
           confirmButtonColor: "#221daf",
         });
         setIsSubmitting(false);
@@ -102,9 +123,9 @@ const UploadFile = () => {
                       <div className="row justify-content-between align-items-center">
                         <h3>Upload a File to Create a Deck</h3>
                         <p className="text-muted">
-                            Once you upload a file, our system will process its content to create
-                            a new deck of flashcards. Ensure the file is in the correct format
-                            for accurate processing.
+                          Once you upload a file, our system will process its content to create
+                          a new deck of flashcards. Ensure the file is in the correct format
+                          for accurate processing.
                         </p>
                       </div>
                     </div>
@@ -124,10 +145,10 @@ const UploadFile = () => {
                       />
                     </div>
                     <div className="form-group mt-4 text-right mb-0">
-                      <button className="btn" type="submit">
+                      <button className="btn" type="submit" disabled={isSubmitting}>
                         <i className="lni lni-upload mr-2"></i>
                         <span className="">
-                          {isSubmitting ? "Uploading File..." : "Upload File"}
+                          {isSubmitting ? "Uploading Text..." : "Upload Text"}
                         </span>
                       </button>
                     </div>
