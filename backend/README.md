@@ -117,6 +117,26 @@ This application uses Firebase as a database, meaning while the application can 
        - Click on `Authentication` in the left-side bar
        - Click on `Sign-in Method`
        - Enable `Email/Password Sign In`
+
+
+    - Description: Create and Add Gemini API key in .env file.
+
+       - How to create Gemini API key:
+            1. Log in to your [Gemini account](https://aistudio.google.com/apikey).
+            2. Navigate to the "Get API Key" 
+            3. Click on "Create API Key."
+            4. Copy the generated API key 
+
+        - Format to store in .env file:
+            - Add the following lines to your `.env` file:
+                ```
+                GEMINI_API_KEY=your_api_key_here
+                ```
+            - Replace `your_api_key_here` with the actual values from the Gemini API key creation process.
+
+    Note: Ensure your `.env` file is included in `.gitignore` to prevent exposing sensitive information.
+
+
       
 3. Start the backend API server
    - Navigate to `FlashCards/backend/src`
