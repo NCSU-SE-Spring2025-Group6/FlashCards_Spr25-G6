@@ -24,15 +24,15 @@
 
 """routes.py is a file in cards folder that has all the functions defined that manipulate the cards. All CRUD functions that needs to be performed on cards are defined here."""
 
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
-
-from src.blueprints import card_bp
 
 try:
     from .. import firebase
 except ImportError:
     from __init__ import firebase
+
+card_bp = Blueprint("card_bp", __name__)
 
 db = firebase.database()
 

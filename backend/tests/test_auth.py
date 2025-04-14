@@ -3,7 +3,9 @@ import sys
 
 sys.path.append("backend/src")
 import unittest
-from src.blueprints import auth_bp, deck_bp, card_bp
+from src.auth.routes import auth_bp
+from src.deck.routes import deck_bp
+from src.cards.routes import card_bp
 import json
 from unittest.mock import patch
 from pathlib import Path

@@ -5,7 +5,9 @@ sys.path.append("backend/src")
 import unittest
 import json
 from unittest.mock import patch
-from src.blueprints import auth_bp, deck_bp, card_bp
+from src.auth.routes import auth_bp
+from src.deck.routes import deck_bp
+from src.cards.routes import card_bp
 from pathlib import Path
 
 # Add the parent directory to sys.path
