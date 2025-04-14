@@ -22,20 +22,20 @@
 
 """routes.py is a file in deck folder that has all the functions defined that manipulate the deck. All CRUD functions are defined here."""
 
-from flask import Blueprint, jsonify, request
+from flask import jsonify, request
 from flask_cors import cross_origin
 from datetime import datetime, timedelta, timezone
 import json
 import base64
 import requests
 
+from src.blueprints import deck_bp
+
 try:
     from .. import firebase
 except ImportError:
     from __init__ import firebase
 
-
-deck_bp = Blueprint("deck_bp", __name__)
 db = firebase.database()
 
 
