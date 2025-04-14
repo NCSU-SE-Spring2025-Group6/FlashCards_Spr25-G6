@@ -111,7 +111,10 @@ To enable the gamification system, add these rules to your Firebase Realtime Dat
 
 ## New Showcase
 
-Screenshots can also be viewed in this gallery: https://gg.teddysc.me/?g=c8cf2567f52c2540d0ee450fa4642976&a and this: https://gg.teddysc.me/?g=df6986ece2f566e5c24f84b0fa199453&a
+Screenshots can also be viewed in these galleries:
+
+- [Gallery 1](https://gg.teddysc.me/?g=c8cf2567f52c2540d0ee450fa4642976&a)
+- [Gallery 2](https://gg.teddysc.me/?g=df6986ece2f566e5c24f84b0fa199453&a)
 
 ![](https://g.teddysc.me/35bf17ca4512d43b3ed39b189290f70f?b)
 
