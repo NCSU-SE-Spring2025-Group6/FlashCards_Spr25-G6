@@ -110,7 +110,7 @@ To enable the gamification system, add these rules to your Firebase Realtime Dat
 ```
 
 ## Create Deck from Lecture Materials (Plain Text) Using LLM
-In this version, we implemented a feature designed to simplify student life and enhance their exam preparation like never before. With this feature, users can simply upload lecture materials, and the Gemini model will automatically generate decks containing the most important questions and answers from the content. A demo of this functionality is showcased in the presentation
+In this version, we implemented a feature designed to simplify student life and enhance their exam preparation like never before. With this feature, users can simply upload lecture materials, and the Gemini model will automatically generate decks containing the most important questions and answers from the content. A demo of this functionality is showcased below. 
 
 
 ## New Showcase
@@ -141,6 +141,10 @@ Screenshots can also be viewed in these galleries:
 
 ![Quiz XP Rewards](https://i.imgur.com/NTcwmFn.png)
 *Earning XP after completing a quiz*
+
+### Creating Deck from Plain Text 
+
+![Create Deck from Plain Text](images/deck-from-file-lossy.gif)
 
 ## Old Showcase
 
