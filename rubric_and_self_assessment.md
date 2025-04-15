@@ -3,14 +3,14 @@
 | **Q1 - Software Overview**       |  |  |   |   |
 |Question 1.1| Does your website and documentation provide a clear, high-level overview of your software?| ✅   |   |README summarizes software and its intended use case          |
 |Question 1.2| Does your website and documentation clearly describe the type of user who should use your software?| ✅   |   |Users can determine for themselves if they would find a flashcard application useful          |
-|Question 1.3| Do you publish case studies to show how your software has been used by yourself and others?|   | ❌  |          |
+|Question 1.3| Do you publish case studies to show how your software has been used by yourself and others?| ✅  |   |    [readme.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6?tab=readme-ov-file#new-showcase)   |
 | **Q2 - Identity**                | |  |   |   |
 |Question 2.1| Is the name of your project/software unique?|   | ❌  |          |
 |Question 2.2| Is your project/software name free from trademark violations?| ✅   |   |          |
 | **Q3 - Availability**            | |  |   |   |
 |Question 3.1| Is your software available as a package that can be deployed without building it?|    | ❌  |          |
-|Question 3.2| Is your software available for free?| ✅   |   |          |
-|Question 3.3| Is your source code publicly available to download, either as a downloadable bundle or via access to a source code repository?| ✅   |   |          |
+|Question 3.2| Is your software available for free?| ✅   |   |    [LICENSE](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/LICENSE)      |
+|Question 3.3| Is your source code publicly available to download, either as a downloadable bundle or via access to a source code repository?| ✅   |   |     [Git-Repo](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6)     |
 | Question 3.4 | Is your software hosted in an established, third-party repository like [GitHub](https://github.com), [BitBucket](https://bitbucket.org), [LaunchPad](https://launchpad.net), or [SourceForge](https://sourceforge.net)? | ✅ |  |Hosted on github |
 | **Q4 - Documentation**           | |  |   |   |
 |Question 4.1| Is your documentation clearly available on your website or within your software?| ✅   |   |          |
