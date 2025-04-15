@@ -23,7 +23,7 @@
 |Question 4.8| Do you publish your release history e.g. release data, version numbers, key features of each release etc. on your web site or in your documentation?| ✅   |   |     [README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/README.md) is updated with each release    |
 | **Q5 - Support**                 | |  |   |   |
 |Question 5.1| Does your software describe how a user can get help with using your software?|    | ❌  |          |
-|Question 5.2| Does your website and documentation describe what support, if any, you provide to users and developers?| ✅   |   | Contributor emails are provided for support         |
+|Question 5.2| Does your website and documentation describe what support, if any, you provide to users and developers?| ✅   |   | Contributor emails are provided in [README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/README.md) for support         |
 |Question 5.3| Does your project have an e-mail address or forum that is solely for supporting users?|    | ❌  |           |
 |Question 5.4| Are e-mails to your support e-mail address received by more than one person?|    | ❌  |           |
 |Question 5.5| Does your project have a ticketing system to manage bug reports and feature requests?| ✅   |   | GitHub issues         |
