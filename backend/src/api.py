@@ -64,8 +64,18 @@ def create_app():
 
 app = create_app()
 app.config["CORS_HEADERS"] = "Content-Type"
-CORS(app, support_credentials=True)
-CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Configure CORS to allow everything from anywhere
+cors_config = {
+    "origins": "*",
+    "methods": ["GET", "HEAD", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+    "allow_headers": "*",
+    "expose_headers": "*",
+    "supports_credentials": True,
+    "max_age": 86400,  # 24 hours
+}
+
+CORS(app, resources={r"/*": cors_config})
 
 app.debug = True
 
