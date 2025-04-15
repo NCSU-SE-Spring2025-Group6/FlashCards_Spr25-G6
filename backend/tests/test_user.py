@@ -57,36 +57,36 @@ def client(app):
     return app.test_client()
 
 # Route for get_user_stats()
-@user_bp.route("/user/<user_id>/stats", methods=["GET"])
-@cross_origin(supports_credentials=True)
-def get_user_stats(user_id):
-    """Fetch aggregated user performance across all decks."""
-    try:
-        leaderboard_entries = db.child("leaderboard").get()
-        total_correct = 0
-        total_incorrect = 0
-        total_decks = 0
+# @user_bp.route("/user/<user_id>/stats", methods=["GET"])
+# @cross_origin(supports_credentials=True)
+# def get_user_stats(user_id):
+#     """Fetch aggregated user performance across all decks."""
+#     try:
+#         leaderboard_entries = db.child("leaderboard").get()
+#         total_correct = 0
+#         total_incorrect = 0
+#         total_decks = 0
 
-        if leaderboard_entries.val():
-            for deck in leaderboard_entries.each():
-                deck_data = deck.val()
-                if user_id in deck_data:
-                    user_data = deck_data[user_id]
-                    total_correct += user_data.get("correct", 0)
-                    total_incorrect += user_data.get("incorrect", 0)
-                    total_decks += 1
+#         if leaderboard_entries.val():
+#             for deck in leaderboard_entries.each():
+#                 deck_data = deck.val()
+#                 if user_id in deck_data:
+#                     user_data = deck_data[user_id]
+#                     total_correct += user_data.get("correct", 0)
+#                     total_incorrect += user_data.get("incorrect", 0)
+#                     total_decks += 1
 
-        return jsonify(
-            {
-                "total_correct": total_correct,
-                "total_incorrect": total_incorrect,
-                "total_decks": total_decks,
-                "message": "User statistics fetched successfully",
-                "status": 200,
-            }
-        ), 200
-    except Exception as e:
-        return jsonify({"message": f"Error fetching user stats: {e}", "status": 400}), 400
+#         return jsonify(
+#             {
+#                 "total_correct": total_correct,
+#                 "total_incorrect": total_incorrect,
+#                 "total_decks": total_decks,
+#                 "message": "User statistics fetched successfully",
+#                 "status": 200,
+#             }
+#         ), 200
+#     except Exception as e:
+#         return jsonify({"message": f"Error fetching user stats: {e}", "status": 400}), 400
 
 # Test cases for get_user_stats()
 
