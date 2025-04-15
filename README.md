@@ -127,18 +127,6 @@ Screenshots can also be viewed in these galleries:
 ![CleanShot-2025-04-13-15.43.50_base64.png](https://g.teddysc.me/tddschn/df6986ece2f566e5c24f84b0fa199453/CleanShot-2025-04-13-15.43.50_base64.png?b)
 ![CleanShot-2025-04-13-15.43.56_base64.png](https://g.teddysc.me/tddschn/df6986ece2f566e5c24f84b0fa199453/CleanShot-2025-04-13-15.43.56_base64.png?b)
 
-
-### Gamification Feature Screenshots
-
-![Dashboard with Gamification](https://i.imgur.com/kBnKL3r.png)
-*Dashboard showing Level, XP progress, and Streak counter*
-
-![Achievements Page](https://i.imgur.com/PZ8J4EV.png)
-*Gamification Profile with achievements and leaderboard*
-
-![Quiz XP Rewards](https://i.imgur.com/NTcwmFn.png)
-*Earning XP after completing a quiz*
-
 ### Creating Deck from Plain Text 
 
 ![Create Deck from Plain Text](images/deck-from-file-lossy.gif)
