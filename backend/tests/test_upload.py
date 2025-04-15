@@ -53,7 +53,13 @@ def test_upload_text_success(client, monkeypatch):
                 {"front": "What is ML?", "back": "Machine Learning", "hint": "Subset of AI."}
             ]
         }
-
+    
+    # Mock create_new_deck function
+    def mock_create_new_deck(user_id, flashcard_json):
+        return jsonify({"deckId": "mock_deck_id", "message": "Deck imported successfully", "status": 201}), 201
+    # Replace the actual function with the mock
+    monkeypatch.setattr("src.upload.routes.create_new_deck", mock_create_new_deck)
+    # Replace the actual function with the mock
     monkeypatch.setattr("src.upload.routes.process_text_with_gemini", mock_process_text_with_gemini)
 
     # Mock request data
