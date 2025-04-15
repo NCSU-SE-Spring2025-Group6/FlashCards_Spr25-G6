@@ -4,7 +4,7 @@ import json
 import math
 from unittest.mock import patch, MagicMock
 
-from ..src.gamification.routes import calculate_level, xp_for_next_level, ACHIEVEMENTS
+from src.gamification.routes import calculate_level, xp_for_next_level, ACHIEVEMENTS
 
 # Constants for testing
 TEST_USER_ID = "test_user_123"
