@@ -161,15 +161,17 @@ Please refer to the [Contributing.md](/Contributing.md) if you want to contribut
 
 ## New Feature: 
 - [x] (Branch: `space-repetition-schedule-visualization`) Currently, a spaced repetition learning algorithm has been implemented (SM-2), but users are not able to see a schedule for when certain cards should be reviewed. We would like to add a dashboard to allow users to see statistics about when certain cards are up for review, and other statistics such as how confident they are or how often certain cards are correctly answered.
-- [x] We have a few tests that are failing. They are primarily failing because of API endpoints that should return an error status code when given invalid data, but aren't. These would be good "first issues" to onboard new developers, and give them a good bite-sized problem to solve.
+- [x] Resolved: We have a few tests that are failing. They are primarily failing because of API endpoints that should return an error status code when given invalid data, but aren't. These would be good "first issues" to onboard new developers, and give them a good bite-sized problem to solve.
 - [x] (Branch: `gamification-xp-tracking`, implemented with recharts.js) "Gamify" the system by adding rewards, an XP based progression system, and streaks for consistently completing the aforementioned spaced repetition for consecutive days in a row.
-
 - [x] (**New feature**, Branch: `deck-from-file`) We have introduced a new feature that allows users to create flashcard decks directly from uploaded files. This feature leverages advanced natural language processing to extract key information and generate meaningful flashcards. How It Works: **1. Upload a File**: Users can upload lecture notes, PDFs, or plain text files. **2. Automatic Processing**: The system processes the file to identify important concepts, questions, and answers. **3. Deck Creation**: A new deck is automatically generated with flashcards based on the uploaded content. Supported File Formats: Plain Text (`.txt`)
-
 
 ## Future Plan
 
-- [] The `deck-from-file` feature currently only accepts plain text files. In future versions, we plan to extend support to other formats such as audio, video, PDFs, webpages, and document files (e.g., `.docx`).
+- [ ] The `deck-from-file` feature currently only accepts plain text files. In future versions, we plan to extend support to other formats such as audio, video, PDFs, webpages, and document files (e.g., `.docx`).
+- [ ] For future versions, implement viewable user profiles that display a user's xp/streak statistics, achievements, and public decks.
+- [ ] Features could be added to support collaboration, such as the ability to make copies of other users' decks or make shared decks/folders that support multiple contributors.
+- [ ] Further improvements to UI/UX could be made. For example, adding back buttons to the Flashcard Statistics Dashboard and Explore pages.
+
 ## Help
 
 Email any queries to the contributors
