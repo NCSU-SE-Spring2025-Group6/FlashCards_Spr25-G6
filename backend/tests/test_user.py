@@ -2,6 +2,11 @@ import pytest
 from flask import Flask, jsonify
 from flask_cors import cross_origin
 from src.user.routes import user_bp
+import sys
+from pathlib import Path
+
+# Add the parent directory to sys.path
+sys.path.append(str(Path(__file__).parent.parent))
 
 # Mock Firebase database
 class MockFirebaseDatabase:
@@ -85,7 +90,7 @@ def get_user_stats(user_id):
 
 # Test cases for get_user_stats()
 
-def test_get_user_stats_success(client, monkeypatch):
+def test_get_user_stats_success(client):
     """Test the /user/<user_id>/stats endpoint with valid data."""
     # Mock leaderboard data
     mock_data = {
@@ -140,7 +145,6 @@ def test_get_user_stats_error(client):
     assert response_data["message"].startswith("Error fetching user stats")
 
 # Test cases for get_user_progress()
-
 
 def test_get_user_progress_no_data(client):
     """Test the /user/<user_id>/progress endpoint with no data."""
