@@ -190,6 +190,7 @@ Email any queries to the contributors
 
 1. [Teddy C](xchen87@ncsu.edu)
 2. [Md Jakaria](mjakari@ncsu.edu)
+3. [Autumn Wright](jmwrigh3@ncsu.edu)
 
 ## License
 
