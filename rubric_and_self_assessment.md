@@ -22,12 +22,12 @@
 |Question 4.7| Do you store your documentation under revision control with your source code?|  ✅  |   |     All READMEs are stored with version control     |
 |Question 4.8| Do you publish your release history e.g. release data, version numbers, key features of each release etc. on your web site or in your documentation?| ✅   |   |     [README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/README.md) is updated with each release    |
 | **Q5 - Support**                 | |  |   |   |
-|Question 5.1| Does your software describe how a user can get help with using your software?| ✅   |   |          |
-|Question 5.2| Does your website and documentation describe what support, if any, you provide to users and developers?| ✅   |   |Users can access support via github issues          |
-|Question 5.3| Does your project have an e-mail address or forum that is solely for supporting users?| ✅   |   |Github issues          |
-|Question 5.4| Are e-mails to your support e-mail address received by more than one person?| ✅   |   |          |
-|Question 5.5| Does your project have a ticketing system to manage bug reports and feature requests?| ✅   |   |          |
-|Question 5.6| Is your project's ticketing system publicly visible to your users, so they can view bug reports and feature requests?| ✅   |   |          |
+|Question 5.1| Does your software describe how a user can get help with using your software?|    | ❌  |          |
+|Question 5.2| Does your website and documentation describe what support, if any, you provide to users and developers?| ✅   |   | Contributor emails are provided for support         |
+|Question 5.3| Does your project have an e-mail address or forum that is solely for supporting users?|    | ❌  |           |
+|Question 5.4| Are e-mails to your support e-mail address received by more than one person?|    | ❌  |           |
+|Question 5.5| Does your project have a ticketing system to manage bug reports and feature requests?| ✅   |   | GitHub issues         |
+|Question 5.6| Is your project's ticketing system publicly visible to your users, so they can view bug reports and feature requests?| ✅   |   |   GitHub issues are publicly visible       |
 | **Q6 - Maintainability**         | |  |   |   |
 |Question 6.1| Is your software’s architecture and design modular?| ✅   |   |          |
 |Question 6.2| Does your software use an accepted coding standard or convention?| ✅   |   |We use common python libraries and the ruff formatter to uphold coding standards          |
@@ -37,26 +37,26 @@
 | **Q8 - Portability**             | |  |   |   |
 |Question 8.1| Is your software cross-platform compatible?| ✅   |   |Deploys to a standard website          |
 | **Q9 - Accessibility**           | |  |   |   |
-|Question 9.1| Does your software adhere to appropriate accessibility conventions or standards?| ✅   |   |          |
-|Question 9.2| Does your documentation adhere to appropriate accessibility conventions or standards?| ✅   |   |          |
+|Question 9.1| Does your software adhere to appropriate accessibility conventions or standards?|    | ❌  |          |
+|Question 9.2| Does your documentation adhere to appropriate accessibility conventions or standards?|    |  ❌ |          |
 | **Q10 - Source Code Management** | |  |   |   |
-|Question 10.1| Is your source code stored in a repository under revision control?| ✅   |   |          |
-|Question 10.2| Is each source code release a snapshot of the repository?| ✅   |   |          |
-|Question 10.3| Are releases tagged in the repository?| ✅   |   |          |
-|Question 10.4| Is there a branch of the repository that is always stable? (i.e. tests always pass, code always builds successfully)| ✅   |   |Main branch          |
-|Question 10.5| Do you back-up your repository?| ✅   |   |Git is a cloud service that does backups          |
+|Question 10.1| Is your source code stored in a repository under revision control?| ✅   |   |     [Git-Repo](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6)     |
+|Question 10.2| Is each source code release a snapshot of the repository?| ✅   |   |    [Releases](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/releases)      |
+|Question 10.3| Are releases tagged in the repository?| ✅   |   |    [Releases](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/releases)      |
+|Question 10.4| Is there a branch of the repository that is always stable? (i.e. tests always pass, code always builds successfully)| ✅   |   | Main branch          |
+|Question 10.5| Do you back-up your repository?| ✅   |   | [Git-Repo](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6)          |
 | **Q11 - Building & Installing**  | |  |   |   |
-|Question 11.1| Do you provide publicly-available instructions for building your software from the source code?| ✅   |   |          |
+|Question 11.1| Do you provide publicly-available instructions for building your software from the source code?| ✅   |   |     [README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/README.md)<br>[frontend/README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/frontend/README.md)<br>[backend/README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/backend/README.md)     |
 |Question 11.2| Can you build, or package, your software using an automated tool?|    | ❌  |          |
-|Question 11.3| Do you provide publicly-available instructions for deploying your software?| ✅   |   |          |
-|Question 11.4| Does your documentation list all third-party dependencies?| ✅   |   |Sort of. They are listed in a requirements.txt file, or a yarn.lock file          |
+|Question 11.3| Do you provide publicly-available instructions for deploying your software?| ✅   |   |     [README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/README.md)<br>[frontend/README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/frontend/README.md)<br>[backend/README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/backend/README.md)     |
+|Question 11.4| Does your documentation list all third-party dependencies?| ✅   | ❌  | Dependencies can be found in requirements.txt files and/or a yarn.lock file          |
 |Question 11.5| Does your documentation list the version number for all third-party dependencies?|    | ❌  |          |
 |Question 11.6| Does your software list the web address, and licences for all third-party dependencies and say whether the dependencies are mandatory or optional?|    | ❌  |          |
-|Question 11.7| Can you download dependencies using a dependency management tool or package manager?| ✅   |   |          |
-|Question 11.8| Do you have tests that can be run after your software has been built or deployed to show whether the build or deployment has been successful?| ✅   |   |          |
+|Question 11.7| Can you download dependencies using a dependency management tool or package manager?| ✅   |   |     Dependencies can be installed using conda and npm/yarn/bun     |
+|Question 11.8| Do you have tests that can be run after your software has been built or deployed to show whether the build or deployment has been successful?|    | ❌  |          |
 | **Q12 - Testing**                | |  |   |   |
 |Question 12.1| Do you have an automated test suite for your software?| ✅   |   |          |
-|Question 12.2| Do you have a framework to periodically (e.g. nightly) run your tests on the latest version of the source code?| ✅   |   |          |
+|Question 12.2| Do you have a framework to periodically (e.g. nightly) run your tests on the latest version of the source code?|    | ❌  |          |
 |Question 12.3| Do you use continuous integration, automatically running tests whenever changes are made to your source code?| ✅   |   |          |
 |Question 12.4| Are your test results publicly visible?| ✅   |   |          |
 |Question 12.5| Are all manually-run tests documented?| ✅   |   |          |
