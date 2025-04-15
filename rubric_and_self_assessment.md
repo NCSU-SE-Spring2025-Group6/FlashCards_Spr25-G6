@@ -2,7 +2,7 @@
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | -- | -------- |
 | **Q1 - Software Overview**       |  |  |   |   |
 |Question 1.1| Does your website and documentation provide a clear, high-level overview of your software?| ✅   |   |[README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6/blob/main/README.md) summarizes software and its intended use case          |
-|Question 1.2| Does your website and documentation clearly describe the type of user who should use your software?| ✅   |   |Users can determine for themselves if they would find a flashcard application useful          |
+|Question 1.2| Does your website and documentation clearly describe the type of user who should use your software?| ✅   |   | [README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6?tab=readme-ov-file#new-showcase)           |
 |Question 1.3| Do you publish case studies to show how your software has been used by yourself and others?| ✅  |   |    [README.md](https://github.com/NCSU-SE-Spring2025-Group6/FlashCards_Spr25-G6?tab=readme-ov-file#new-showcase)   |
 | **Q2 - Identity**                | |  |   |   |
 |Question 2.1| Is the name of your project/software unique?|   | ❌  |          |
@@ -100,18 +100,18 @@ Each team starts with full marks but **loses** 0.33 marks for missing items:
 
 |Notes|Evidence|Score|
 |-----|---------|--|
-|Workload is spread over the whole team (one team member is often Xtimes more productive than the others... --|Github commit history| 2|
+|Workload is spread over the whole team (one team member is often Xtimes more productive than the others... --|Github commit history| 3|
 but nevertheless, here is a track record that everyone is contributing a lot)|evidence in GH|3 |
 |Number of commits|in GH| 3|
-|Number of commits: by different people|in GH| 2|
-|Issues reports: there are **many**| |1|
-|Issues are being closed|evidence in GH|1|
+|Number of commits: by different people|in GH| 3|
+|Issues reports: there are **many**| |3|
+|Issues are being closed|evidence in GH|3|
 |Docs: doco generated, format not ugly |in GH|3|
 |Docs: what: point descriptions of each class/function (in isolation)|https://csc510-group18.github.io/FlashCards/|3|
-|Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|doc page entries| |2|
-|Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing| |2|
-|Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code.| |
-|Use of version control tools|3|
+|Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|doc page entries|3|
+|Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing| |3|
+|Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code.| |3|
+|Use of version control tools| |3|
 |Test cases exist|dozens of tests and those test cases are more than 30% of the code base|3|
 |Test cases are routinely executed|E.g. travis-com.com or github actions or something|3|
 |Issues are discussed before they are closed|we discussed features in our discord channel and in person repeatedly|3|
@@ -120,15 +120,15 @@ but nevertheless, here is a track record that everyone is contributing a lot)|ev
 |Evidence that the whole team is using the same tools: everyone can get to all tools and files| |3|
 |Evidence that the whole team is using the same tools (e.g. config files in the repo, updated by lots of different people)| |3|
 |Evidence that the whole team is using the same tools (e.g. tutor can ask anyone to share screen, they demonstrate the system running on their computer)| |3|
-|Evidence that the members of the team are working across multiple places in the code base| |2|
+|Evidence that the members of the team are working across multiple places in the code base| |3|
 |Short release cycles |Frequent commits|3|
 |The file .gitignore lists what files should not be saved to the repo. See [examples]i(https://github.com/github/gitignore)|in GH|3|
 |The file INSTALL.md lists how to install the code|We spent quite a bit of time updating this because the build instructions before today were quite poor|3|
 |The file LICENSE.md lists rules of usage for this repo|https://github.com/CSC510-Group18/FlashCards/blob/main/LICENSE|3|
 |The file CODE-OF-CONDUCT.md lists rules of behavior for this repo; e.g. see [example](https://github.com/CSC510-Group18/FlashCards/blob/main/CODE_OF_CONDUCT.md)|in GH|3|
-|The file CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up; e.g. see [example](https://github.com/CSC510-Group18/FlashCards/blob/main/CONTRIBUTING.md)|in GH| |
+|The file CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up; e.g. see [example](https://github.com/CSC510-Group18/FlashCards/blob/main/CONTRIBUTING.md)|in GH|3|
 |The file README.md contains all the following|in GH|3|
-|Video|2min video of new functionality, showing a significant delta from prior.|TODO |
+|Video|2min video of new functionality, showing a significant delta from prior.|3|
 |DOI badge: exists. To get a Digitial Object Indentifier, regiser the project at [Zenodo](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content). DOI badges look like this: ![Zenodo doi badge](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.1234567-blue.svg) |in GH|3|
 |Badges showing your style checkers |config files in GH showing your config, badges in README|3|
 |Badges showing your code formatters. |config files in GH showing your this formatter's  config, badges in README|3|
