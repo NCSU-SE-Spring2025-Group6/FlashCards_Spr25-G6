@@ -169,27 +169,28 @@ def test_process_text_with_gemini(monkeypatch):
     assert flashcards["cards"][0]["front"] == "What is AI?"
     assert flashcards["cards"][0]["back"] == "Artificial Intelligence"
 
-def test_create_new_deck(app):
-    """Test the create_new_deck function."""
-    user_id = "user123"
-    flashcard_json = {
-        "deck": {
-            "title": "AI Basics",
-            "description": "AI and ML basics",
-            "visibility": "public"
-        },
-        "cards": [
-            {"front": "What is AI?", "back": "Artificial Intelligence", "hint": "Think about machines."},
-            {"front": "What is ML?", "back": "Machine Learning", "hint": "Subset of AI."}
-        ]
-    }
+# def test_create_new_deck(app):
+#     """Test the create_new_deck function."""
+  
+#     user_id = "user123"
+#     flashcard_json = {
+#         "deck": {
+#             "title": "AI Basics",
+#             "description": "AI and ML basics",
+#             "visibility": "public"
+#         },
+#         "cards": [
+#             {"front": "What is AI?", "back": "Artificial Intelligence", "hint": "Think about machines."},
+#             {"front": "What is ML?", "back": "Machine Learning", "hint": "Subset of AI."}
+#         ]
+#     }
 
-    # Push an application context
-    with app.app_context():
-        response = create_new_deck(user_id, flashcard_json)
-        assert response[-1] == 201
-        response_data = response[0].get_json()
-        assert response_data["message"] == "Deck imported successfully"
+#     # Push an application context
+#     with app.app_context():
+#         response = create_new_deck(user_id, flashcard_json)
+#         assert response[-1] == 201
+#         response_data = response[0].get_json()
+#         assert response_data["message"] == "Deck imported successfully"
 
 # Test cases for create_new_deck()
 
@@ -278,5 +279,38 @@ def test_create_new_deck_success(app):
     with app.app_context():
         response = create_new_deck(user_id, flashcard_json)
         assert response[-1] == 201
+        response_data = response[0].get_json()
+        assert response_data["message"] == "Deck imported successfully"
+
+def test_create_new_deck_with_mock_db(app):
+    """Test the create_new_deck function with a mock database."""
+    # Initialize the mock database
+    mock_db = MockFirebaseDatabase()
+
+    # Replace the global db object with the mock database
+    global db
+    db = mock_db
+
+    # Test data
+    user_id = "user123"
+    flashcard_json = {
+        "deck": {
+            "title": "AI Basics",
+            "description": "AI and ML basics",
+            "visibility": "public"
+        },
+        "cards": [
+            {"front": "What is AI?", "back": "Artificial Intelligence", "hint": "Think about machines."},
+            {"front": "What is ML?", "back": "Machine Learning", "hint": "Subset of AI."}
+        ]
+    }
+
+    # Push an application context
+    with app.app_context():
+        # Call the function
+        response = create_new_deck(user_id, flashcard_json)
+
+        # Assertions
+        assert response[1] == 201  # Check the status code
         response_data = response[0].get_json()
         assert response_data["message"] == "Deck imported successfully"
