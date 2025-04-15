@@ -145,35 +145,35 @@ class TestDeck(unittest.TestCase):
             # assert response.status_code == 201
             assert response.status_code in [201, 400]
 
-    # def test_delete_deck_route_post(self):
-    #     """Test the deck/delete route of our app with"""
-    #     self.app.post(
-    #             "/create-account",
-    #             data=json.dumps(dict(email="aaronadb@gmail.com", password="flashcards123")),
-    #             content_type="application/json",
-    #             follow_redirects=True,
-    #         )
-    #     with self.app:
-    #         self.app.post(
-    #             "/login",
-    #             data=json.dumps(dict(email="aaronadb@gmail.com", password="flashcards123")),
-    #             content_type="application/json",
-    #             follow_redirects=True,
-    #         )
-    #         self.app.post(
-    #             "/deck/create",
-    #             data=json.dumps(
-    #                 dict(
-    #                     localId="Test",
-    #                     title="TestDeck",
-    #                     description="This is a test deck",
-    #                     visibility="public",
-    #                 )
-    #             ),
-    #             content_type="application/json",
-    #         )
-    #         response = self.app.delete("/deck/delete/Test")
-    #         assert response.status_code == 200
+    def test_delete_deck_route_post(self):
+        """Test the deck/delete route of our app with"""
+        # self.app.post(
+        #         "/create-account",
+        #         data=json.dumps(dict(email="aaronadb@gmail.com", password="flashcards123")),
+        #         content_type="application/json",
+        #         follow_redirects=True,
+        #     )
+        with self.app:
+            self.app.post(
+                "/login",
+                data=json.dumps(dict(email="ironman@gmail.com", password="ironman")),
+                content_type="application/json",
+                follow_redirects=True,
+            )
+            self.app.post(
+                "/deck/create",
+                data=json.dumps(
+                    dict(
+                        localId="Test",
+                        title="TestDeck",
+                        description="This is a test deck",
+                        visibility="public",
+                    )
+                ),
+                content_type="application/json",
+            )
+            response = self.app.delete("/deck/delete/Test")
+            assert response.status_code == 200
 
     def test_update_last_opened_deck_route_failure(self):
         """Test the deck/updateLastOpened/<id> route of our app with failure scenario"""
