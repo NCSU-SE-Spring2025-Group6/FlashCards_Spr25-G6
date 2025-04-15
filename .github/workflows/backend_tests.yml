@@ -35,4 +35,4 @@ jobs:
         
     - name: Run tests
       run: |
-        cd backend && pytest --verbose
+        cd backend && pytest -c ../pytest.ini --verbose
