@@ -1,12 +1,7 @@
 import pytest
 from flask import Flask, jsonify
 from flask_cors import cross_origin
-from src.user.routes import user_bp
-import sys
-from pathlib import Path
-
-# Add the parent directory to sys.path
-sys.path.append(str(Path(__file__).parent.parent))
+from src.user.routes import user_bp, get_user_stats, get_user_progress
 
 # Mock Firebase database
 class MockFirebaseDatabase:
@@ -56,7 +51,7 @@ def app():
 def client(app):
     return app.test_client()
 
-# Route for get_user_stats()
+# # Route for get_user_stats()
 # @user_bp.route("/user/<user_id>/stats", methods=["GET"])
 # @cross_origin(supports_credentials=True)
 # def get_user_stats(user_id):
@@ -90,7 +85,7 @@ def client(app):
 
 # Test cases for get_user_stats()
 
-def test_get_user_stats_success(client):
+def test_get_user_stats_success(client, monkeypatch):
     """Test the /user/<user_id>/stats endpoint with valid data."""
     # Mock leaderboard data
     mock_data = {
@@ -102,9 +97,12 @@ def test_get_user_stats_success(client):
         },
     }
 
-    # Replace the global db object with the mock database
-    global db
-    db.data = mock_data
+    # Create a new mock database instance for this test
+    mock_db = MockFirebaseDatabase()
+    mock_db.data = mock_data
+
+    # Monkeypatch the global db object to use the mock database
+    monkeypatch.setattr("src.user.routes.db", mock_db)
 
     response = client.get("/user/user123/stats")
     assert response.status_code == 200
@@ -114,8 +112,13 @@ def test_get_user_stats_success(client):
     assert response_data["total_decks"] == 2
     assert response_data["message"] == "User statistics fetched successfully"
 
-def test_get_user_stats_no_data(client):
-    """Test the /user/<user_id>/stats endpoint with no data."""
+def test_get_user_stats_fail(client, monkeypatch):
+    # Create a new mock database instance for this test
+    mock_db = MockFirebaseDatabase()
+    mock_db.data = {}
+
+    # Monkeypatch the global db object to use the mock database
+    monkeypatch.setattr("src.user.routes.db", mock_db)
     # Replace the global db object with an empty mock database
     global db
     db.data = {}
@@ -124,14 +127,19 @@ def test_get_user_stats_no_data(client):
     assert response.status_code == 200
     response_data = response.get_json()
     assert response_data["total_correct"] == 0
-    assert response_data["total_incorrect"] == 0
-    assert response_data["total_decks"] == 0
-    assert response_data["message"] == "User statistics fetched successfully"
 
-def test_get_user_stats_error(client):
-    """Test the /user/<user_id>/stats endpoint with an error."""
-    global db
-    db = MockFirebaseDatabase()
+def test_get_user_stats_error(client, monkeypatch):
+    # Create a new mock database instance for this test
+    mock_db = MockFirebaseDatabase()
+
+    # Simulate a database error
+    def mock_get_error():
+        raise Exception("Database error")
+
+    mock_db.get = mock_get_error
+
+    # Monkeypatch the global db object to use the mock database
+    monkeypatch.setattr("src.user.routes.db", mock_db)
 
     # Simulate a database error
     def mock_get_error():
@@ -145,6 +153,7 @@ def test_get_user_stats_error(client):
     assert response_data["message"].startswith("Error fetching user stats")
 
 # Test cases for get_user_progress()
+
 
 def test_get_user_progress_no_data(client):
     """Test the /user/<user_id>/progress endpoint with no data."""

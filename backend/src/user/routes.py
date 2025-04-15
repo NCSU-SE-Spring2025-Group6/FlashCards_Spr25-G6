@@ -15,7 +15,7 @@ db = firebase.database()
 
 user_bp.route("/user/<user_id>/stats", methods=["GET"])
 
-
+@user_bp.route('/user/<user_id>/stats', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_user_stats(user_id):
     """Fetch aggregated user performance across all decks."""
