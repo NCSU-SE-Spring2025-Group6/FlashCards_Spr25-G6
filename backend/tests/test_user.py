@@ -155,11 +155,16 @@ def test_get_user_stats_error(client, monkeypatch):
 # Test cases for get_user_progress()
 
 
-def test_get_user_progress_no_data(client):
+def test_get_user_progress_no_data(client, monkeypatch):
     """Test the /user/<user_id>/progress endpoint with no data."""
     # Replace the global db object with an empty mock database
-    global db
-    db.data = {}
+    mock_db = MockFirebaseDatabase()
+    mock_db.data = {}
+
+
+    # Monkeypatch the global db object to use the mock database
+    monkeypatch.setattr("src.user.routes.db", mock_db)
+
 
     response = client.get("/user/user123/progress")
     assert response.status_code == 200
