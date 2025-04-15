@@ -60,7 +60,7 @@ def upload_text():
     try:
         logging.info("Generating flashcards from text.")
         flashcards = process_text_with_gemini(text)  # Use the Gemini API for text processing
-        logging.info(f"Generated flashcards: {flashcards}")
+        # logging.info(f"Generated flashcards: {flashcards}")
 
         # Convert the generated flashcards to JSON
         deck = {
@@ -71,7 +71,7 @@ def upload_text():
             }
         }
         flashcard_json = {**deck, **flashcards}
-        logging.info(f"Flashcard JSON: {flashcard_json}")
+        # logging.info(f"Flashcard JSON: {flashcard_json}")
         return create_new_deck(local_id, flashcard_json)
     except Exception as e:
         logging.error(f"Error processing text: {str(e)}")
@@ -134,14 +134,14 @@ def process_text_with_gemini(text):
 def create_new_deck(user_id, flashcard_json):
     """Save the flashcard JSON as a new deck in the database."""
     if not flashcard_json or not user_id:
-        return jsonify(message="Missing required data", status=400), 400
+        return jsonify({"message": "Missing required data", "status": 400}), 400
 
     # Decode the file content
     import_data = flashcard_json
 
     # Validate the structure
     if "deck" not in import_data or "cards" not in import_data:
-        return jsonify(message="Invalid file structure", status=400), 400
+        return jsonify({"message": "Invalid file structure", "status": 400}), 400
 
     # Create the deck
     deck_data = import_data["deck"]
@@ -157,7 +157,8 @@ def create_new_deck(user_id, flashcard_json):
         card["deckId"] = deck_id
         card["userId"] = user_id
         db.child("card").push(card)
-    logging.info(f"Deck created: {flashcard_json}")
+
+    # logging.info(f"Deck created: {flashcard_json}")
     return jsonify({"deckId": deck_id, "message": "Deck imported successfully", "status": 201}), 201
 
 
